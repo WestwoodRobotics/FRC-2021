@@ -36,7 +36,7 @@ public class DriveTrain extends SubsystemBase {
 
     private boolean slowMode = false;
 
-    /** Creates a new ExampleSubsystem. */
+    /** Creates a new DriveTrain. */
     public DriveTrain() {
         config();
     }
@@ -77,7 +77,6 @@ public class DriveTrain extends SubsystemBase {
         //SmartDashboard.putNumber("volts", leftMaster.getMotorOutputVoltage());
 
         this.driveWheelsVolts(leftVolts, rightVolts);
-
         
     }
 
