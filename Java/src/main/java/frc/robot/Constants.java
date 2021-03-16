@@ -22,20 +22,20 @@ public final class Constants {
 
         // Feedforward
         public static final double C_kS_LEFT = 1.45,
-                                   C_kV_LEFT = 3.24,
+                                   C_kV_LEFT = 2.8,
                                    C_kA_LEFT = 0.723;
 
         public static final double C_kS_RIGHT = 1.45,
-                                   C_kV_RIGHT = 4.23,
+                                   C_kV_RIGHT = 4.32,
                                    C_kA_RIGHT = 0.651;
         
         // Left PID                               
-        public static final double C_kP_LEFT = 2.2,
+        public static final double C_kP_LEFT = 2.24,
                                    C_kI_LEFT = 0,
                                    C_kD_LEFT = 0;
         
         // Right PID
-        public static final double C_kP_RIGHT = 2.25,
+        public static final double C_kP_RIGHT = 2.24,
                                    C_kI_RIGHT = 0,
                                    C_kD_RIGHT = 0;
 

@@ -78,7 +78,7 @@ public class DriveTrain extends SubsystemBase {
 
         this.driveWheelsVolts(leftVolts, rightVolts);
 
-        //SmartDashboard.putNumber("vel", (leftEncoderVelMeters()+rightEncoderVelMeters())/2);
+        
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds(){
@@ -161,6 +161,9 @@ public class DriveTrain extends SubsystemBase {
 
         SmartDashboard.putNumber("right meters", ticksToMeters(rightMaster.getSelectedSensorPosition()));
         SmartDashboard.putNumber("left meters", ticksToMeters(leftMaster.getSelectedSensorPosition()));
+        
+        SmartDashboard.putNumber("right meters per sec", this.rightEncoderVelMeters());
+        SmartDashboard.putNumber("left meters per sec", this.leftEncoderVelMeters());
         //leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         //rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         // This method will be called once per scheduler run

@@ -73,8 +73,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
       
-    rightTrig.whenPressed(() -> s_driveTrain.toggleSlowMode());
-    //rightTrig.whenPressed(new RunCommand(() -> s_driveTrain.setVelocityPID(.5, .5)).withTimeout(12).andThen(() -> s_driveTrain.stopWheels(), s_driveTrain));
+    //rightTrig.whenPressed(() -> s_driveTrain.toggleSlowMode());
+    rightTrig.whenPressed(new RunCommand(() -> s_driveTrain.setVelocityPID(.5, .5)).withTimeout(12).andThen(() -> s_driveTrain.stopWheels(), s_driveTrain));
       (new JoystickButton(rightJoy, 2)).whenActive(new InstantCommand(() -> s_driveTrain.config()));
       //rightTrig.whenPressed(() -> s_driveTrain.setSlowMode(true)).whenReleased(() -> s_driveTrain.setSlowMode(false));
       //rightTrig.whenPressed(() -> s_driveTrain.setVelocityPID(.5, .5));
