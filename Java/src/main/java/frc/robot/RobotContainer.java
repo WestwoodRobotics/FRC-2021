@@ -28,7 +28,7 @@ public class RobotContainer {
 
   // Subsystems
   private final DriveTrain s_driveTrain;
-
+  private final Magazine s_magazine;
   // Commands
 
 
@@ -37,20 +37,37 @@ public class RobotContainer {
   private final Joystick leftJoy = new Joystick(1);
   private final Joystick rightJoy = new Joystick(2);
 
+  // Y-box controller
+  private final Joystick mechJoy = new Joystick(3);
+
+  // Configure joystick buttons
   private final JoystickButton rightTrig = new JoystickButton(rightJoy, 1);
   
+  // Y-box controller triggers, bumpers, buttons
+  private final JoystickButton mechRightBumper = new JoystickButton(mechJoy, 6);
+  private final JoystickButton mechLeftTrigger = new JoystickButton(mechJoy, 7);
+
   //private final JoystickButton rightTrig = new JoystickButton(joy, 8);
   //private final Joystick rightJoy = new Joystick(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     s_driveTrain = new DriveTrain();
-    
+    s_magazine = new Magazine();
+
     s_driveTrain.setDefaultCommand(
       new TankDrive(
         () -> -leftJoy.getY(),
         () -> rightJoy.getY(),
         s_driveTrain
+      )
+    );
+
+    m_magazine.setDefaultCommand(
+      new RunCommand(
+        () -> s_magazine.feedBall(
+          () -> mechJoy.getRawAxis(4)
+        )
       )
     );
     
@@ -79,6 +96,7 @@ public class RobotContainer {
       //rightTrig.whenPressed(() -> s_driveTrain.setSlowMode(true)).whenReleased(() -> s_driveTrain.setSlowMode(false));
       //rightTrig.whenPressed(() -> s_driveTrain.setVelocityPID(.5, .5));
 
+    mechLeftTrigger.whenPressed(() -> magazine.shiftBall()).whenReleased(() -> magazine.stopBall());
   } 
 
 

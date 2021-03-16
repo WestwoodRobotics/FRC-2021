@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Magazine extends SubsystemBase {
@@ -20,15 +22,17 @@ public class Magazine extends SubsystemBase {
     shift.set(0.5);
   }
 
-  public void feedBall(){
-    shift.set(0.5);
-    feed.set(0.5);
+  public void feedBall(DoubleSupplier speedSupplier){
+    // Set to a variable speed
+    shift.set(speedSupplier.getAsDouble());
+    feed.set(speedSupplier.getAsDouble());
   }
 
-  public void stopBalls(){
+  public void stopBall(){
     shift.stopMotor(0);
     feed.stopMotor();
   }
+
 
   @Override
   public void periodic() {
