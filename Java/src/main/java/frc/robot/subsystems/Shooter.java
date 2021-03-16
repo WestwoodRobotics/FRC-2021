@@ -4,7 +4,14 @@
 
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.ShooterConstants. *;
+import static frc.robot.Constants.ShooterConstants.C_kA;
+import static frc.robot.Constants.ShooterConstants.C_kD;
+import static frc.robot.Constants.ShooterConstants.C_kI;
+import static frc.robot.Constants.ShooterConstants.C_kP;
+import static frc.robot.Constants.ShooterConstants.C_kS;
+import static frc.robot.Constants.ShooterConstants.C_kV;
+import static frc.robot.Constants.ShooterConstants.P_SHOOTER_spMAX_1;
+import static frc.robot.Constants.ShooterConstants.P_SHOOTER_spMAX_2;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
