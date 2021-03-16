@@ -15,16 +15,16 @@ import frc.robot.subsystems.DriveTrain;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class DriveDistanceProfiledPID extends ProfiledPIDCommand {
   /** Creates a new DriveDistanceProfiledPID. */
-  public DriveDistanceProfiledPID(DriveTrain s_driveTrain, double meters, double endVelocity) {
+  public DriveDistanceProfiledPID(DriveTrain s_driveTrain, double meters, double endVelocity, double maxVel, double maxAccel) {
     super(
         // The ProfiledPIDController used by the command
         new ProfiledPIDController(
             // The PID gains
-            1.0,
+            3.0,
             0,
             0,
             // The motion profile constraints
-            new TrapezoidProfile.Constraints(1, 1)),
+            new TrapezoidProfile.Constraints(maxVel, maxAccel)),
         // This should return the measurement
         () -> s_driveTrain.getAverageEncoderMeters(),
         // This should return the goal (can also be a constant)
