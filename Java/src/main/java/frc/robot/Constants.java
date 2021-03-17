@@ -70,6 +70,15 @@ public final class Constants {
                                    C_kP = 0,
                                    C_kI = 0,
                                    C_kD = 0;
+        
+        public static enum E_SHOOTER_POS{
+            CLOSE,
+            FAR;
+        }
+        public static final double  C_SHOOTER_SPEED_CLOSE = 0,
+                                    C_SHOOTER_SPEED_FAR = 0,
+                                    C_SHOOTER_SPEED_TOLERANCE = 0;
+        
     }
 
 
