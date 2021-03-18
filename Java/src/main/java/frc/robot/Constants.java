@@ -68,5 +68,9 @@ public final class Constants {
                                    C_kD = 0;
     }
 
+    public static final class MagazineConstants{
+        public static final int //P_MAGAZINE_vicSPX_1 = 8,
+                                P_MAGAZINE_talSRX_2 = 9;
+    }
 
 }
