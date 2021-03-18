@@ -10,9 +10,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.DriveDistanceProfiledPID;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Magazine;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -63,11 +63,17 @@ public class RobotContainer {
       )
     );
 
-    m_magazine.setDefaultCommand(
+    s_magazine.setDefaultCommand(
       new RunCommand(
-        () -> s_magazine.feedBall(
-          () -> mechJoy.getRawAxis(4)
-        )
+        () -> {
+          if (mechLeftTrigger.get()){
+            s_magazine.shiftBall();
+          }
+          else{
+            s_magazine.feedBall(() -> mechJoy.getRawAxis(4));
+          }
+        },
+        s_magazine
       )
     );
     
@@ -96,7 +102,7 @@ public class RobotContainer {
       //rightTrig.whenPressed(() -> s_driveTrain.setSlowMode(true)).whenReleased(() -> s_driveTrain.setSlowMode(false));
       //rightTrig.whenPressed(() -> s_driveTrain.setVelocityPID(.5, .5));
 
-    mechLeftTrigger.whenPressed(() -> magazine.shiftBall()).whenReleased(() -> magazine.stopBall());
+    //mechLeftTrigger.whenPressed(() -> s_magazine.shiftBall()).whenReleased(() -> s_magazine.stopBall());
   } 
 
 
