@@ -21,21 +21,17 @@ public final class Constants {
                                 P_DRIVE_RIGHT_FOLLOW_vicSPX = 4;
 
         // Feedforward
-        public static final double C_kS_LEFT = 1.3,
-                                   C_kV_LEFT = 3.02,
-                                   C_kA_LEFT = 0.682;
-
-        public static final double C_kS_RIGHT = 1.45,
-                                   C_kV_RIGHT = 4.228,
-                                   C_kA_RIGHT = 0.786;
+        public static final double C_kS = 1.44,
+                                   C_kV = 3.26,
+                                   C_kA = 0.693;
         
         // Left PID                               
-        public static final double C_kP_LEFT = 2.21,
+        public static final double C_kP_LEFT = 10.4,
                                    C_kI_LEFT = 0,
                                    C_kD_LEFT = 0;
         
         // Right PID
-        public static final double C_kP_RIGHT = 2.2,
+        public static final double C_kP_RIGHT = 15.9,
                                    C_kI_RIGHT = 0,
                                    C_kD_RIGHT = 0;
 

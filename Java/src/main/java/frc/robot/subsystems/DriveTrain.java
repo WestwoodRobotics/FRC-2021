@@ -4,16 +4,34 @@
 
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.Constants.DriveConstants.C_kA;
+import static frc.robot.Constants.DriveConstants.C_kD_LEFT;
+import static frc.robot.Constants.DriveConstants.C_kD_RIGHT;
+import static frc.robot.Constants.DriveConstants.C_kI_LEFT;
+import static frc.robot.Constants.DriveConstants.C_kI_RIGHT;
+import static frc.robot.Constants.DriveConstants.C_kP_LEFT;
+import static frc.robot.Constants.DriveConstants.C_kP_RIGHT;
+import static frc.robot.Constants.DriveConstants.C_kS;
+import static frc.robot.Constants.DriveConstants.C_kV;
+import static frc.robot.Constants.DriveConstants.P_DRIVE_LEFT_FOLLOW_vicSPX;
+import static frc.robot.Constants.DriveConstants.P_DRIVE_LEFT_MASTER_talSRX;
+import static frc.robot.Constants.DriveConstants.P_DRIVE_RIGHT_FOLLOW_vicSPX;
+import static frc.robot.Constants.DriveConstants.P_DRIVE_RIGHT_MASTER_talSRX;
+import static frc.robot.Constants.DriveConstants.metersToTicks;
+import static frc.robot.Constants.DriveConstants.ticksToMeters;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,16 +46,22 @@ public class DriveTrain extends SubsystemBase {
     
     // DifferentialDrive class for motor safety and control
     private final DifferentialDrive drive = new DifferentialDrive(leftMaster, rightMaster);
-    private final SimpleMotorFeedforward feedforwardLeft = new SimpleMotorFeedforward(C_kS_LEFT, C_kV_LEFT, C_kA_LEFT);
-    private final SimpleMotorFeedforward feedforwardRight = new SimpleMotorFeedforward(C_kS_RIGHT, C_kV_RIGHT, C_kA_RIGHT);
+    private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(C_kS, C_kV, C_kA);
+    //private final SimpleMotorFeedforward feedforwardRight = new SimpleMotorFeedforward(C_kS_RIGHT, C_kV_RIGHT, C_kA_RIGHT);
 
     private final PIDController leftController = new PIDController(C_kP_LEFT, C_kI_LEFT, C_kD_LEFT);
     private final PIDController rightController = new PIDController(C_kP_RIGHT, C_kI_RIGHT, C_kD_RIGHT);
+
+    private final DifferentialDriveOdometry odometry;
+
+    private AHRS imu = new AHRS();
+
 
     private boolean slowMode = false;
 
     /** Creates a new DriveTrain. */
     public DriveTrain() {
+        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(this.getHeadingDegrees()));
         config();
     }
 
@@ -68,8 +92,8 @@ public class DriveTrain extends SubsystemBase {
         
         DifferentialDriveWheelSpeeds wheelSpeeds = this.getWheelSpeeds();
 
-        leftVolts += feedforwardLeft.calculate(leftMetersPerSec);
-        rightVolts += feedforwardRight.calculate(rightMetersPerSec);
+        leftVolts += feedforward.calculate(leftMetersPerSec);
+        rightVolts += feedforward.calculate(rightMetersPerSec);
 
         leftVolts += leftController.calculate(wheelSpeeds.leftMetersPerSecond, leftMetersPerSec);
         rightVolts += rightController.calculate(wheelSpeeds.rightMetersPerSecond, rightMetersPerSec);
@@ -100,6 +124,8 @@ public class DriveTrain extends SubsystemBase {
         leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         
+        this.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
+        
         //leftMaster.config_kP(0, 0);
         //leftMaster.config_kI(0, C_kI_LEFT);
         //leftMaster.config_kD(0, C_kD_LEFT);
@@ -129,6 +155,8 @@ public class DriveTrain extends SubsystemBase {
         this.setSlowMode(!this.getSlowMode());
     }
 
+    // Encoder functions
+
     // Ticks
     public double leftEncoderGetTicks(){return leftMaster.getSelectedSensorPosition();}
     public double rightEncoderGetTicks(){return rightMaster.getSelectedSensorPosition();}
@@ -145,12 +173,38 @@ public class DriveTrain extends SubsystemBase {
     public double leftEncoderVelMeters(){return ticksToMeters(leftMaster.getSelectedSensorVelocity())*10;}
     public double rightEncoderVelMeters(){return ticksToMeters(rightMaster.getSelectedSensorVelocity())*10;}
 
+    // Average of both wheels
     public double getAverageEncoderTicks()    {return (leftEncoderGetTicks() + rightEncoderGetTicks())/2.0;}
     public double getAverageEncoderMeters()   {return (leftEncoderGetMeters() + rightEncoderGetMeters())/2.0;}
     public double getAverageEncoderVelMeters()      {return (leftEncoderVelMeters() + rightEncoderVelMeters())/2.0;}
 
+    // Reset
     public void zeroLeftEncoder(){leftMaster.setSelectedSensorPosition(0);}
     public void zeroRightEncoder(){rightMaster.setSelectedSensorPosition(0);}
+
+    // Gyro functions
+    public double getHeadingDegrees()         {return -imu.pidGet();}
+    public double getHeadingRadians()         {return Math.toRadians(this.getHeadingDegrees());}
+    public double getTurnRate()               {return imu.getRate();} 
+    public void   zeroHeading()               {imu.reset();}
+    
+    // Odometry
+    public void resetOdometry(Pose2d pose){
+        zeroLeftEncoder();
+        zeroRightEncoder();
+    
+        odometry.resetPosition(pose, Rotation2d.fromDegrees(this.getHeadingDegrees()));
+    }
+
+    public Pose2d getPose(){
+        return odometry.getPoseMeters();
+    }
+
+    /*public Command getTrajectoryCommand(){
+        resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
+        DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(feedforward, kinematics, maxVoltage)
+    }*/
+
 
     @Override
     public void periodic() {
@@ -163,6 +217,16 @@ public class DriveTrain extends SubsystemBase {
         
         SmartDashboard.putNumber("right meters per sec", this.rightEncoderVelMeters());
         SmartDashboard.putNumber("left meters per sec", this.leftEncoderVelMeters());
+
+        odometry.update(
+                Rotation2d.fromDegrees(this.getHeadingDegrees()), 
+                this.leftEncoderGetMeters(), 
+                this.rightEncoderGetMeters()
+              );
+
+        SmartDashboard.putNumber("x", odometry.getPoseMeters().getX());
+        SmartDashboard.putNumber("y", odometry.getPoseMeters().getY());
+        SmartDashboard.putNumber("heading", odometry.getPoseMeters().getRotation().getDegrees());
         //leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         //rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         // This method will be called once per scheduler run
