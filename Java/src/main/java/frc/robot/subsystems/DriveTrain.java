@@ -13,17 +13,16 @@ import static frc.robot.Constants.DriveConstants.C_kP_LEFT;
 import static frc.robot.Constants.DriveConstants.C_kP_RIGHT;
 import static frc.robot.Constants.DriveConstants.C_kS;
 import static frc.robot.Constants.DriveConstants.C_kV;
-import static frc.robot.Constants.DriveConstants.P_DRIVE_LEFT_FOLLOW_vicSPX;
-import static frc.robot.Constants.DriveConstants.P_DRIVE_LEFT_MASTER_talSRX;
-import static frc.robot.Constants.DriveConstants.P_DRIVE_RIGHT_FOLLOW_vicSPX;
-import static frc.robot.Constants.DriveConstants.P_DRIVE_RIGHT_MASTER_talSRX;
+import static frc.robot.Constants.DriveConstants.P_DRIVE_LEFT_FOLLOW;
+import static frc.robot.Constants.DriveConstants.P_DRIVE_LEFT_MASTER;
+import static frc.robot.Constants.DriveConstants.P_DRIVE_RIGHT_FOLLOW;
+import static frc.robot.Constants.DriveConstants.P_DRIVE_RIGHT_MASTER;
 import static frc.robot.Constants.DriveConstants.metersToTicks;
 import static frc.robot.Constants.DriveConstants.ticksToMeters;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -39,10 +38,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class DriveTrain extends SubsystemBase {
     
     // Motor Controllers for DriveTrain
-    private final WPI_TalonSRX leftMaster = new WPI_TalonSRX(P_DRIVE_LEFT_MASTER_talSRX);
-    private final WPI_TalonSRX rightMaster = new WPI_TalonSRX(P_DRIVE_RIGHT_MASTER_talSRX);
-    private final WPI_VictorSPX leftFollow = new WPI_VictorSPX(P_DRIVE_LEFT_FOLLOW_vicSPX);
-    private final WPI_VictorSPX rightFollow = new WPI_VictorSPX(P_DRIVE_RIGHT_FOLLOW_vicSPX);
+    private final WPI_TalonFX leftMaster = new WPI_TalonFX(P_DRIVE_LEFT_MASTER);
+    private final WPI_TalonFX rightMaster = new WPI_TalonFX(P_DRIVE_RIGHT_MASTER);
+    private final WPI_TalonFX leftFollow = new WPI_TalonFX(P_DRIVE_LEFT_FOLLOW);
+    private final WPI_TalonFX rightFollow = new WPI_TalonFX(P_DRIVE_RIGHT_FOLLOW);
     
     // DifferentialDrive class for motor safety and control
     private final DifferentialDrive drive = new DifferentialDrive(leftMaster, rightMaster);

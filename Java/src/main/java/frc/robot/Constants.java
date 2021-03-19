@@ -15,10 +15,10 @@ package frc.robot;
 public final class Constants {
 
     public static final class DriveConstants{
-        public static final int P_DRIVE_LEFT_MASTER_talSRX = 3,
-                                P_DRIVE_LEFT_FOLLOW_vicSPX = 1,
-                                P_DRIVE_RIGHT_MASTER_talSRX = 2,
-                                P_DRIVE_RIGHT_FOLLOW_vicSPX = 4;
+        public static final int P_DRIVE_LEFT_MASTER = 0,
+                                P_DRIVE_LEFT_FOLLOW = 1,
+                                P_DRIVE_RIGHT_MASTER = 3,
+                                P_DRIVE_RIGHT_FOLLOW = 2;
 
         // Feedforward
         public static final double C_kS = 1.44,
