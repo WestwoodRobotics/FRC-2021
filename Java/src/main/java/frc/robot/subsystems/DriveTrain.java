@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.DriveConstants.C_TRACK_WIDTH_METERS;
 import static frc.robot.Constants.DriveConstants.C_kA;
 import static frc.robot.Constants.DriveConstants.C_kD_LEFT;
 import static frc.robot.Constants.DriveConstants.C_kD_RIGHT;
@@ -31,9 +32,12 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveTrain extends SubsystemBase {
@@ -53,6 +57,8 @@ public class DriveTrain extends SubsystemBase {
     private final PIDController rightController = new PIDController(C_kP_RIGHT, C_kI_RIGHT, C_kD_RIGHT);
 
     private final DifferentialDriveOdometry odometry;
+
+    private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(C_TRACK_WIDTH_METERS);
 
     private AHRS imu = new AHRS();
 
@@ -202,7 +208,10 @@ public class DriveTrain extends SubsystemBase {
 
     /*public Command getTrajectoryCommand(){
         resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
-        DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(feedforward, kinematics, maxVoltage)
+        DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(feedforward, kinematics, 10.0);
+        
+        
+        //return new Command();
     }*/
 
 
