@@ -7,12 +7,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.auto.BarrelPath;
+import frc.robot.commands.DriveDistanceProfiledPID;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Magazine;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,7 +26,7 @@ public class RobotContainer {
 
   // Subsystems
   private final DriveTrain s_driveTrain;
-  private final Magazine s_magazine;
+  //private final Magazine s_magazine;
   // Commands
 
 
@@ -50,7 +51,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     s_driveTrain = new DriveTrain();
-    s_magazine = new Magazine();
+    //s_magazine = new Magazine();
 
     s_driveTrain.setDefaultCommand(
       new TankDrive(
@@ -60,7 +61,7 @@ public class RobotContainer {
       )
     );
 
-    s_magazine.setDefaultCommand(
+    /*s_magazine.setDefaultCommand(
       new RunCommand(
         () -> {
           if (mechLeftTrigger.get()){
@@ -72,7 +73,7 @@ public class RobotContainer {
         },
         s_magazine
       )
-    );
+    );*/
     
     // s_driveTrain.setDefaultCommand(
     //   new TankDrive(
@@ -94,8 +95,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
       
     //rightTrig.whenPressed(() -> s_driveTrain.toggleSlowMode());
-    rightTrig.whenPressed(new RunCommand(() -> s_driveTrain.setVelocityPID(0.5, 0.5)));
-    //rightTrig.whenPressed(new DriveDistanceProfiledPID(s_driveTrain, 5, 0, 1, 1));
+    //rightTrig.whenPressed(new RunCommand(() -> s_driveTrain.setVelocityPID(0.5, 0.5)));
+    rightTrig.whenPressed(new DriveDistanceProfiledPID(s_driveTrain, 5, 0, 1, 1));
     (new JoystickButton(rightJoy, 2)).whenActive(new InstantCommand(() -> s_driveTrain.config()));
 
     //mechLeftTrigger.whenPressed(() -> s_magazine.shiftBall()).whenReleased(() -> s_magazine.stopBall());
@@ -107,8 +108,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand() {
-  //   // An ExampleCommand will run in autonomous
-  //   return m_autoCommand;
-  // }
+   public Command getAutonomousCommand() {
+     // An ExampleCommand will run in autonomous
+     return new BarrelPath(s_driveTrain);
+   }
 }

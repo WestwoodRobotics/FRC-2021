@@ -4,22 +4,9 @@
 
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.DriveConstants.C_TRACK_WIDTH_METERS;
-import static frc.robot.Constants.DriveConstants.C_kA;
-import static frc.robot.Constants.DriveConstants.C_kD_LEFT;
-import static frc.robot.Constants.DriveConstants.C_kD_RIGHT;
-import static frc.robot.Constants.DriveConstants.C_kI_LEFT;
-import static frc.robot.Constants.DriveConstants.C_kI_RIGHT;
-import static frc.robot.Constants.DriveConstants.C_kP_LEFT;
-import static frc.robot.Constants.DriveConstants.C_kP_RIGHT;
-import static frc.robot.Constants.DriveConstants.C_kS;
-import static frc.robot.Constants.DriveConstants.C_kV;
-import static frc.robot.Constants.DriveConstants.P_DRIVE_LEFT_FOLLOW_vicSPX;
-import static frc.robot.Constants.DriveConstants.P_DRIVE_LEFT_MASTER_talSRX;
-import static frc.robot.Constants.DriveConstants.P_DRIVE_RIGHT_FOLLOW_vicSPX;
-import static frc.robot.Constants.DriveConstants.P_DRIVE_RIGHT_MASTER_talSRX;
-import static frc.robot.Constants.DriveConstants.metersToTicks;
-import static frc.robot.Constants.DriveConstants.ticksToMeters;
+import static frc.robot.Constants.DriveConstants.*;
+
+import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -28,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -36,8 +24,12 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveTrain extends SubsystemBase {
@@ -206,14 +198,53 @@ public class DriveTrain extends SubsystemBase {
         return odometry.getPoseMeters();
     }
 
-    /*public Command getTrajectoryCommand(){
+    public Command getTrajectoryCommand(double maxVel, double maxAccel, Pose2d initialPose, List interiorWaypoints, Pose2d endPose){
         resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
-        DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(feedforward, kinematics, 10.0);
-        
-        
-        //return new Command();
-    }*/
+        DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(feedforward, kinematics, C_MAX_VOLTAGE);
 
+        TrajectoryConfig config = new TrajectoryConfig(maxVel, maxAccel).setKinematics(kinematics).addConstraint(autoVoltageConstraint);
+
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(initialPose, interiorWaypoints, endPose, config);
+
+        RamseteCommand ramseteCommand = new RamseteCommand(
+                trajectory, 
+                this::getPose, 
+                new RamseteController(C_kB_RAMSETE, C_kZ_RAMSETE), 
+                feedforward, 
+                kinematics, 
+                this::getWheelSpeeds, 
+                leftController, 
+                rightController, 
+                this::driveWheelsVolts, 
+                this
+            );
+
+        
+        return ramseteCommand;
+    }
+
+    public Command getTrajectoryCommand(double maxVel, double maxAccel, Trajectory trajectory){
+        resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
+        DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(feedforward, kinematics, C_MAX_VOLTAGE);
+
+        TrajectoryConfig config = new TrajectoryConfig(maxVel, maxAccel).setKinematics(kinematics).addConstraint(autoVoltageConstraint);
+
+        RamseteCommand ramseteCommand = new RamseteCommand(
+                trajectory, 
+                this::getPose, 
+                new RamseteController(C_kB_RAMSETE, C_kZ_RAMSETE), 
+                feedforward, 
+                kinematics, 
+                this::getWheelSpeeds, 
+                leftController, 
+                rightController, 
+                this::driveWheelsVolts, 
+                this
+            );
+
+        
+        return ramseteCommand;
+    }
 
     @Override
     public void periodic() {

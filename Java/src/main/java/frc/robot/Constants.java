@@ -31,7 +31,7 @@ public final class Constants {
                                    C_kD_LEFT = 0;
         
         // Right PID
-        public static final double C_kP_RIGHT = 15.9,
+        public static final double C_kP_RIGHT = 25.9,
                                    C_kI_RIGHT = 0,
                                    C_kD_RIGHT = 0;
 
@@ -39,7 +39,10 @@ public final class Constants {
         public static final double C_DRIVE_EPR = 8192;
         public static final double C_WHEEL_DIAMETER_METERS = 0.1524;
 
-        public static final double C_MAX_VOLTAGE = 0;
+        public static final double C_MAX_VOLTAGE = 10.0;
+
+        public static final double C_kB_RAMSETE = 2.0,
+                                   C_kZ_RAMSETE = 0.7;
 
         public static double ticksToMeters(double ticks){
             return ticks*Math.PI*C_WHEEL_DIAMETER_METERS/C_DRIVE_EPR;
