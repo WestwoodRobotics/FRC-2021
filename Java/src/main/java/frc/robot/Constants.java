@@ -60,9 +60,10 @@ public final class Constants {
         }
     }
 
-    public static final class ShooterConstants{
+    public static final class ShooterConstants{// TODO Set motor ports
         public static final int P_SHOOTER_spMAX_1 = 0,
-                                P_SHOOTER_spMAX_2 = 0;
+                                P_SHOOTER_spMAX_2 = 0,
+                                P_ACTUATOR = 0;
 
         public static final double C_kS = 0,
                                    C_kV = 0,
@@ -77,7 +78,13 @@ public final class Constants {
         }
         public static final double  C_SHOOTER_SPEED_CLOSE = 0,
                                     C_SHOOTER_SPEED_FAR = 0,
-                                    C_SHOOTER_SPEED_TOLERANCE = 0;
+                                    C_SHOOTER_SPEED_TOLERANCE = 0,
+
+                                    C_ACTUATOR_MIN_PWM_MS = 1050, // About 1 second, the minimum PMW value
+                                    C_ACTUATOR_MAX_PWM_MS = 1950, // About 2 second, the maximum PMW value
+
+                                    C_ACTUATOR_MIN_DEG = 0, // Do the math nerd
+                                    C_ACTUATOR_MAX_DEG = 0;
         
     }
 

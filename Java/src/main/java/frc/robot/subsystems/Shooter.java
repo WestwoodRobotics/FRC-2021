@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,6 +21,8 @@ public class Shooter extends SubsystemBase {
   private CANSparkMax shooterMotor1;
   private CANSparkMax shooterMotor2;
   
+  private Servo actuator;
+
   private double speedSetpoint = 0.0;
   private E_SHOOTER_POS pos;
 
@@ -43,6 +46,12 @@ public class Shooter extends SubsystemBase {
     shooterMotor2.follow(shooterMotor1, true);
 
     pos = E_SHOOTER_POS.CLOSE;
+
+    // Actuator stuff
+
+    actuator = new Servo(P_ACTUATOR);
+
+    actuator.setBounds(C_ACTUATOR_MAX_PWM_MS, 1800, ((C_ACTUATOR_MIN_PWM_MS+C_ACTUATOR_MAX_PWM_MS)/2), 1200, C_ACTUATOR_MIN_PWM_MS);
   }
 
  public void stopShooter()
@@ -96,6 +105,12 @@ public class Shooter extends SubsystemBase {
    return (Math.abs(this.getShooterVel() - this.speedSetpoint) < C_SHOOTER_SPEED_TOLERANCE);
  }
  
+ // Actuator
+
+ public void setLength(double length)// Takes in value 0.0 to 1.0
+ {
+   actuator.setPosition(length);
+ }
 
   @Override
   public void periodic() {
