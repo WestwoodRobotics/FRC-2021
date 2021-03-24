@@ -26,6 +26,8 @@ public class Shooter extends SubsystemBase {
   private double speedSetpoint = 0.0;
   private E_SHOOTER_POS pos;
 
+  private double actuatorPos = 0.0;// Position 0.0 to 1.0
+
   //creating feedfoward and velocityPID objects
   private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(C_kS, C_kV, C_kA);
   private PIDController velPID = new PIDController(C_kP, C_kI, C_kD);
@@ -110,6 +112,18 @@ public class Shooter extends SubsystemBase {
  public void setLength(double length)// Takes in value 0.0 to 1.0
  {
    actuator.setPosition(length);
+ }
+
+ public void increaseLength()
+ {
+  if (actuatorPos < 1.0) {actuatorPos += 0.2;} 
+  actuator.setPosition(actuatorPos);
+ }
+
+ public void decreaseLength()
+ {
+  if (actuatorPos > 0.0) {actuatorPos -= 0.2;} 
+  actuator.setPosition(actuatorPos);
  }
 
   @Override
