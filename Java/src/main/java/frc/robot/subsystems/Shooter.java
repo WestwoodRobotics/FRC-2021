@@ -13,13 +13,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants.E_SHOOTER_POS;
 
 public class Shooter extends SubsystemBase {
   //variables
-  private CANSparkMax shooterMotor1;
-  private CANSparkMax shooterMotor2;
+private CANSparkMax shooterMotor1;
+private CANSparkMax shooterMotor2;
   
   private Servo actuator;
 
@@ -53,7 +54,8 @@ public class Shooter extends SubsystemBase {
 
     actuator = new Servo(P_ACTUATOR);
 
-    actuator.setBounds(C_ACTUATOR_MAX_PWM_MS, 1800, ((C_ACTUATOR_MIN_PWM_MS+C_ACTUATOR_MAX_PWM_MS)/2), 1200, C_ACTUATOR_MIN_PWM_MS);
+    //actuator.setBounds(C_ACTUATOR_MAX_PWM_MS, 1800, ((C_ACTUATOR_MIN_PWM_MS+C_ACTUATOR_MAX_PWM_MS)/2), 1200, C_ACTUATOR_MIN_PWM_MS);
+    actuator.setBounds(2.0, 1.8, 1.5, 1.2, 1.0);
   }
 
  public void stopShooter()
@@ -101,6 +103,7 @@ public class Shooter extends SubsystemBase {
  {
    return shooterMotor1.getEncoder().getVelocity();
  }
+ 
 
  public boolean isFlyWheelReady()
  {
@@ -116,18 +119,22 @@ public class Shooter extends SubsystemBase {
 
  public void increaseLength()
  {
-  if (actuatorPos < 1.0) {actuatorPos += 0.2;} 
-  actuator.setPosition(actuatorPos);
+  //if (actuatorPos < 1.0) {actuatorPos += 0.2;} 
+  //actuator.setPosition(actuatorPos);
+  actuator.setSpeed(1);
+  
  }
 
  public void decreaseLength()
  {
-  if (actuatorPos > 0.0) {actuatorPos -= 0.2;} 
-  actuator.setPosition(actuatorPos);
+  //if (actuatorPos > 0.0) {actuatorPos -= 0.2;} 
+  //actuator.setPosition(actuatorPos);
+  actuator.setSpeed(-1);
  }
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("speed",actuator.getSpeed());
     // This method will be called once per scheduler run
   }
 }

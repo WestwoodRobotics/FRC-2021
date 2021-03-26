@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Magazine;
-import frc.robot.subsystems.Shooter;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -27,8 +26,6 @@ public class RobotContainer {
   // Subsystems
   private final DriveTrain s_driveTrain;
   private final Magazine s_magazine;
-  private final Shooter s_shooter;
-
   // Commands
 
 
@@ -47,9 +44,6 @@ public class RobotContainer {
   private final JoystickButton mechRightBumper = new JoystickButton(mechJoy, 6);
   private final JoystickButton mechLeftTrigger = new JoystickButton(mechJoy, 7);
 
-  private final JoystickButton mechTriangle = new JoystickButton(mechJoy, 4);
-  private final JoystickButton mechCircle = new JoystickButton(mechJoy, 3);
-
   //private final JoystickButton rightTrig = new JoystickButton(joy, 8);
   //private final Joystick rightJoy = new Joystick(1);
 
@@ -57,8 +51,6 @@ public class RobotContainer {
   public RobotContainer() {
     s_driveTrain = new DriveTrain();
     s_magazine = new Magazine();
-
-    s_shooter = new Shooter();
 
     s_driveTrain.setDefaultCommand(
       new TankDrive(
@@ -68,7 +60,7 @@ public class RobotContainer {
       )
     );
 
-   /*s_magazine.setDefaultCommand(
+    s_magazine.setDefaultCommand(
       new RunCommand(
         () -> {
           if (mechLeftTrigger.get()){
@@ -80,21 +72,7 @@ public class RobotContainer {
         },
         s_magazine
       )
-    );*/
-
-    /*s_shooter.setDefaultCommand(
-      new RunCommand(
-        () -> {
-          if (mechTriangle.get()){
-            s_shooter.increaseLength();
-          }
-          else if (mechCircle.get()){
-            s_shooter.decreaseLength();
-          }
-        },
-        s_shooter
-      )
-    );*/
+    );
     
     // s_driveTrain.setDefaultCommand(
     //   new TankDrive(
@@ -119,9 +97,6 @@ public class RobotContainer {
     //rightTrig.whenPressed(new RunCommand(() -> s_driveTrain.setVelocityPID(0.5, 0.5)));
     //rightTrig.whenPressed(new DriveDistanceProfiledPID(s_driveTrain, 5, 0, 1, 1));
     (new JoystickButton(rightJoy, 2)).whenActive(new InstantCommand(() -> s_driveTrain.config()));
-
-    mechTriangle.whenPressed(() -> s_shooter.increaseLength());
-    mechCircle.whenPressed(()-> s_shooter.decreaseLength());
 
     //mechLeftTrigger.whenPressed(() -> s_magazine.shiftBall()).whenReleased(() -> s_magazine.stopBall());
   } 
