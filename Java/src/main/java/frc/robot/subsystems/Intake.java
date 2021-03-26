@@ -15,33 +15,32 @@ public class Intake extends SubsystemBase {
   private final WPI_TalonSRX intakeMotor1 = new WPI_TalonSRX(P_INTAKE_talSRX_1);
   private Solenoid intakeSol1 = new Solenoid(P_INTAKE_sol_1);
 
-  private Solenoid intakeSol2 = new Solenoid(P_INTAKE_sol_2);
-
   public Intake() {
     intakeSol1.set(false);
-    intakeSol2.set(false);
     intakeMotor1.setInverted(true);
+  }
+  
+  public void togglePiston(){
+    intakeSol1.toggle();
   }
 
   public void pushIntake(){
     intakeSol1.set(true);
-    intakeSol2.set(true);
   }
 
   public void pullIntake(){
     intakeSol1.set(false);
-    intakeSol2.set(false);
   }
 
-  public void IntakeStop(){
+  public void intakeStop(){
     intakeMotor1.stopMotor();
   }
 
-  public void IntakeIn(){
+  public void intakeIn(){
     intakeMotor1.set(C_INTAKE_SPEED);
   }
 
-  public void IntakeOut(){
+  public void intakeOut(){
     intakeMotor1.set(-C_INTAKE_SPEED);
   }
   @Override
