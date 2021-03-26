@@ -55,6 +55,15 @@ public final class Constants {
             return meters * 2/C_TRACK_WIDTH_METERS;
         }
     }
+    
+    public static final class IntakeConstants{
+        public static final int P_INTAKE_talSRX_1 = 4;
+        
+        public static final int P_INTAKE_sol_1 = 0;
+        public static final int P_INTAKE_sol_2 = 0;
+
+        public static final double C_INTAKE_SPEED = 1.0;
+    }
 
     public static final class ShooterConstants{
         public static final int P_SHOOTER_spMAX_1 = 0,
