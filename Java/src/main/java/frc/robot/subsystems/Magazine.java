@@ -21,17 +21,18 @@ public class Magazine extends SubsystemBase {
   public Magazine() {
 
     shift.setInverted(true);
+    feed.setInverted(true);
   }
 
   public void shiftBall(){
     // Set to an arbitrary value [-1, 1]; just needs to move the motor
-    shift.set(0.5);
+    shift.set(1);
   }
 
-  public void feedBall(DoubleSupplier speedSupplier){
+  public void feedBall(){
     // Set to a variable speed
-    shift.set((speedSupplier.getAsDouble()+1.0)/2);//   -1 is very important; the axis defaults at -1
-    feed.set(speedSupplier.getAsDouble());
+    shift.set(1);//   -1 is very important; the axis defaults at -1
+    feed.set(1);
   }
 
   public void stopBall(){

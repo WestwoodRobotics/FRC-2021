@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
@@ -44,11 +45,14 @@ public class RobotContainer {
   private final JoystickButton rightTrig = new JoystickButton(rightJoy, 1);
   
   // Y-box controller triggers, bumpers, buttons
-  private final JoystickButton mechRightBumper = new JoystickButton(mechJoy, 6);
+  //private final JoystickButton mechRightBumper = new JoystickButton(mechJoy, 6);
+  private final JoystickButton mechRightTrigger = new JoystickButton(mechJoy, 8);
   private final JoystickButton mechLeftTrigger = new JoystickButton(mechJoy, 7);
 
   private final JoystickButton mechTriangle = new JoystickButton(mechJoy, 4);
   private final JoystickButton mechCircle = new JoystickButton(mechJoy, 3);
+  private final JoystickButton mechSquare = new JoystickButton(mechJoy, 1);
+  private final JoystickButton mechCross = new JoystickButton(mechJoy, 2);
 
   //private final JoystickButton rightTrig = new JoystickButton(joy, 8);
   //private final Joystick rightJoy = new Joystick(1);
@@ -67,43 +71,7 @@ public class RobotContainer {
         s_driveTrain
       )
     );
-
-   s_magazine.setDefaultCommand(
-      new RunCommand(
-        () -> {
-          if (mechLeftTrigger.get()){
-            s_magazine.shiftBall();
-          }
-          else{
-            s_magazine.feedBall(() -> mechJoy.getRawAxis(4));
-          }
-        },
-        s_magazine
-      )
-    );
-
-    /*s_shooter.setDefaultCommand(
-      new RunCommand(
-        () -> {
-          if (mechTriangle.get()){
-            s_shooter.increaseLength();
-          }
-          else if (mechCircle.get()){
-            s_shooter.decreaseLength();
-          }
-        },
-        s_shooter
-      )
-    );*/
     
-    // s_driveTrain.setDefaultCommand(
-    //   new TankDrive(
-    //     () -> -leftJoy.getY(),
-    //     () -> rightJoy.getY(),
-    //     s_driveTrain
-    //   )
-    // );
-
     configureButtonBindings();
   }
 
@@ -124,6 +92,10 @@ public class RobotContainer {
     mechCircle.whenPressed(()-> s_shooter.decreaseLength());
 
     mechLeftTrigger.whenPressed(() -> s_magazine.shiftBall()).whenReleased(() -> s_magazine.stopBall());
+    mechRightTrigger.whenPressed(() -> s_magazine.feedBall()).whenReleased(() -> s_magazine.stopBall());
+
+    mechSquare.toggleWhenPressed(new StartEndCommand(() -> s_shooter.setShooterPercentage(.5), () -> s_shooter.stopShooter(), s_shooter));
+
   } 
 
 

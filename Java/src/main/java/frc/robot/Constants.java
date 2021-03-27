@@ -57,8 +57,8 @@ public final class Constants {
     }
 
     public static final class ShooterConstants{// TODO Set motor ports
-        public static final int P_SHOOTER_spMAX_1 = 0,
-                                P_SHOOTER_spMAX_2 = 0,
+        public static final int P_SHOOTER_spMAX_1 = 7,
+                                P_SHOOTER_spMAX_2 = 8,
                                 P_ACTUATOR = 0;
 
         public static final double C_kS = 0,
