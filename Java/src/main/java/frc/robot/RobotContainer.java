@@ -4,14 +4,22 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.auto.BarrelPath;
-import frc.robot.commands.DriveDistanceProfiledPID;
+import frc.robot.auto.RunPaths;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
 
@@ -29,6 +37,8 @@ public class RobotContainer {
   //private final Magazine s_magazine;
   // Commands
 
+  private RunPaths barrelPath;
+  private RunPaths bouncePath;
 
   // Joysticks
   //private final Joystick joy = new Joystick(0); 
@@ -94,9 +104,9 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
       
-    //rightTrig.whenPressed(() -> s_driveTrain.toggleSlowMode());
-    //rightTrig.whenPressed(new RunCommand(() -> s_driveTrain.setVelocityPID(0.5, 0.5)));
-    rightTrig.whenPressed(new DriveDistanceProfiledPID(s_driveTrain, 5, 0, 1, 1));
+    rightTrig.whenPressed(() -> s_driveTrain.toggleSlowMode());
+    rightTrig.whenPressed(new RunCommand(() -> s_driveTrain.setVelocityPID(0.5, 0.5)));
+    //rightTrig.whenPressed(new DriveDistanceProfiledPID(s_driveTrain, 5, 0, 1, 1));
     (new JoystickButton(rightJoy, 2)).whenActive(new InstantCommand(() -> s_driveTrain.config()));
 
     //mechLeftTrigger.whenPressed(() -> s_magazine.shiftBall()).whenReleased(() -> s_magazine.stopBall());
@@ -108,8 +118,59 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-   public Command getAutonomousCommand() {
-     // An ExampleCommand will run in autonomous
-     return new BarrelPath(s_driveTrain);
-   }
+  public Command getAutonomousCommand() {
+    // An ExampleCommand will run in autonomous
+    return bouncePath;
+  }
+
+  public void loadBarrel(){
+    String trajectoryJSON = "paths/BarrelTest.wpilib.json";
+    Trajectory barrelTraj = new Trajectory();
+    try {
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+      barrelTraj = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+    }
+    
+    barrelPath = new RunPaths(s_driveTrain, List.of(barrelTraj));
+
+  }
+
+  public void loadBounce(){
+    String bounce1File = "paths/BounceTest1.wpilib.json";
+    String bounce2File = "paths/BounceTest2.wpilib.json";
+    String bounce3File = "paths/BounceTest3.wpilib.json";
+    String bounce4File = "paths/BounceTest4.wpilib.json";
+
+    Trajectory bounce1 = new Trajectory();
+    Trajectory bounce2 = new Trajectory();
+    Trajectory bounce3 = new Trajectory();
+    Trajectory bounce4 = new Trajectory();
+
+    try {
+      Path bounce1Path = Filesystem.getDeployDirectory().toPath().resolve(bounce1File);
+      bounce1 = TrajectoryUtil.fromPathweaverJson(bounce1Path);
+
+      Path bounce2Path = Filesystem.getDeployDirectory().toPath().resolve(bounce2File);
+      bounce2 = TrajectoryUtil.fromPathweaverJson(bounce2Path);
+
+      Path bounce3Path = Filesystem.getDeployDirectory().toPath().resolve(bounce3File);
+      bounce3 = TrajectoryUtil.fromPathweaverJson(bounce3Path);
+
+      Path bounce4Path = Filesystem.getDeployDirectory().toPath().resolve(bounce4File);
+      bounce4 = TrajectoryUtil.fromPathweaverJson(bounce4Path);
+
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + bounce1File, ex.getStackTrace());
+    }
+
+    bouncePath = new RunPaths(s_driveTrain, List.of(
+      bounce1,
+      bounce2,
+      bounce3,
+      bounce4
+    ));
+
+  }
 }

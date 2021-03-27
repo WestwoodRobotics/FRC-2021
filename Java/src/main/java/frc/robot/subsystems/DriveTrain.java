@@ -93,11 +93,12 @@ public class DriveTrain extends SubsystemBase {
         leftVolts += feedforward.calculate(leftMetersPerSec);
         rightVolts += feedforward.calculate(rightMetersPerSec);
 
-        leftVolts += leftController.calculate(wheelSpeeds.leftMetersPerSecond, leftMetersPerSec);
-        rightVolts += rightController.calculate(wheelSpeeds.rightMetersPerSecond, rightMetersPerSec);
+        //leftVolts += leftController.calculate(wheelSpeeds.leftMetersPerSecond, leftMetersPerSec);
+        //rightVolts += rightController.calculate(wheelSpeeds.rightMetersPerSecond, rightMetersPerSec);
 
         //SmartDashboard.putNumber("volts", leftMaster.getMotorOutputVoltage());
-
+        
+        drive.feed();
         this.driveWheelsVolts(leftVolts, rightVolts);
         
     }
@@ -122,7 +123,7 @@ public class DriveTrain extends SubsystemBase {
         leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         
-        this.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
+        //this.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
         
         //leftMaster.config_kP(0, 0);
         //leftMaster.config_kI(0, C_kI_LEFT);
@@ -199,7 +200,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public Command getTrajectoryCommand(double maxVel, double maxAccel, Pose2d initialPose, List interiorWaypoints, Pose2d endPose){
-        resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
+        resetOdometry(initialPose);
         DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(feedforward, kinematics, C_MAX_VOLTAGE);
 
         TrajectoryConfig config = new TrajectoryConfig(maxVel, maxAccel).setKinematics(kinematics).addConstraint(autoVoltageConstraint);
@@ -224,7 +225,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public Command getTrajectoryCommand(double maxVel, double maxAccel, Trajectory trajectory){
-        resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
+        resetOdometry(trajectory.getInitialPose());
         DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(feedforward, kinematics, C_MAX_VOLTAGE);
 
         TrajectoryConfig config = new TrajectoryConfig(maxVel, maxAccel).setKinematics(kinematics).addConstraint(autoVoltageConstraint);
@@ -249,14 +250,15 @@ public class DriveTrain extends SubsystemBase {
     @Override
     public void periodic() {
         //driveWheelsPercent(.5, .5);
-        SmartDashboard.putNumber("right encoder", rightMaster.getSelectedSensorPosition());
         SmartDashboard.putNumber("left encoder", leftMaster.getSelectedSensorPosition());
-
-        SmartDashboard.putNumber("right meters", ticksToMeters(rightMaster.getSelectedSensorPosition()));
-        SmartDashboard.putNumber("left meters", ticksToMeters(leftMaster.getSelectedSensorPosition()));
+        SmartDashboard.putNumber("right encoder", rightMaster.getSelectedSensorPosition());
         
-        SmartDashboard.putNumber("right meters per sec", this.rightEncoderVelMeters());
-        SmartDashboard.putNumber("left meters per sec", this.leftEncoderVelMeters());
+        SmartDashboard.putNumber("left meters", ticksToMeters(leftMaster.getSelectedSensorPosition()));
+        SmartDashboard.putNumber("right meters", ticksToMeters(rightMaster.getSelectedSensorPosition()));        
+        
+        SmartDashboard.putNumber("leftvel", this.leftEncoderVelMeters());
+        SmartDashboard.putNumber("rightvel", this.rightEncoderVelMeters());
+        
 
         odometry.update(
                 Rotation2d.fromDegrees(this.getHeadingDegrees()), 
@@ -264,9 +266,11 @@ public class DriveTrain extends SubsystemBase {
                 this.rightEncoderGetMeters()
               );
 
+        drive.feed();
+
         SmartDashboard.putNumber("x", odometry.getPoseMeters().getX());
         SmartDashboard.putNumber("y", odometry.getPoseMeters().getY());
-        SmartDashboard.putNumber("heading", odometry.getPoseMeters().getRotation().getDegrees());
+        SmartDashboard.putNumber("heading", odometry.getPoseMeters().getRotation().getRadians());
         //leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         //rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         // This method will be called once per scheduler run
