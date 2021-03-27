@@ -80,6 +80,7 @@ private CANSparkMax shooterMotor2;
 
     volt += feedforward.calculate(rpm / 60.0);
     volt += velPID.calculate(getShooterVel() / 60.0, rpm / 60.0);
+    
     this.setShooterVoltage(volt);
  }
 
@@ -134,7 +135,8 @@ private CANSparkMax shooterMotor2;
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("speed",actuator.getSpeed());
+    SmartDashboard.putNumber("speed",this.getShooterVel());
+
     // This method will be called once per scheduler run
   }
 }
