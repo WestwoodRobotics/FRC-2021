@@ -68,7 +68,7 @@ public class RobotContainer {
       )
     );
 
-   /*s_magazine.setDefaultCommand(
+   s_magazine.setDefaultCommand(
       new RunCommand(
         () -> {
           if (mechLeftTrigger.get()){
@@ -80,7 +80,7 @@ public class RobotContainer {
         },
         s_magazine
       )
-    );*/
+    );
 
     /*s_shooter.setDefaultCommand(
       new RunCommand(
@@ -123,7 +123,7 @@ public class RobotContainer {
     mechTriangle.whenPressed(() -> s_shooter.increaseLength());
     mechCircle.whenPressed(()-> s_shooter.decreaseLength());
 
-    //mechLeftTrigger.whenPressed(() -> s_magazine.shiftBall()).whenReleased(() -> s_magazine.stopBall());
+    mechLeftTrigger.whenPressed(() -> s_magazine.shiftBall()).whenReleased(() -> s_magazine.stopBall());
   } 
 
 
