@@ -118,19 +118,32 @@ private CANSparkMax shooterMotor2;
    actuator.setPosition(length);
  }
 
- public void increaseLength()
+ public void increaseLength()// Used for testing
  {
-  //if (actuatorPos < 1.0) {actuatorPos += 0.2;} 
+  if (actuatorPos < 25.0) {actuatorPos += 3;} 
   //actuator.setPosition(actuatorPos);
-  actuator.setSpeed(1);
-  
+  //actuator.setSpeed(1);
+  this.setDegrees(actuatorPos);
  }
 
- public void decreaseLength()
+ public void decreaseLength()// Also used for testing
  {
-  //if (actuatorPos > 0.0) {actuatorPos -= 0.2;} 
+  if (actuatorPos > 0.0) {actuatorPos -= 3;} 
   //actuator.setPosition(actuatorPos);
-  actuator.setSpeed(-1);
+  //actuator.setSpeed(-1);
+  this.setDegrees(actuatorPos);
+ }
+
+ public void setDegrees(double degreesHorizontal)// Set degrees above horizontal. https://docs.google.com/document/d/1j0m0NdNlVOw_fCRlhDM2ct6ic74NRDTYBwbQS5yPkpQ/edit?usp=sharing
+ {
+  if (degreesHorizontal < C_ACTUATOR_MIN_DEG) {degreesHorizontal = C_ACTUATOR_MIN_DEG;}
+  if (degreesHorizontal > C_ACTUATOR_MAX_DEG) {degreesHorizontal = C_ACTUATOR_MAX_DEG;}  
+  double degrees = 90 - degreesHorizontal;// Step 1
+  degrees += C_DEGREES_DIFFERENCE;// Step 2 to 3
+  double totalRadius = Math.sqrt( Math.pow(C_CENTER_DISTANCE_CM, 2) *  Math.pow(C_HOOD_RADIUS_CM, 2) - (2 * C_CENTER_DISTANCE_CM * C_HOOD_RADIUS_CM * Math.cos(degrees)) );// Step 6
+  double actuatorExtension = totalRadius - C_ACTUATOR_RETRACTED_CM;
+  actuatorExtension /= C_ACTUATOR_EXTENSION_CM;
+  actuator.setPosition(actuatorExtension);
  }
 
   @Override
