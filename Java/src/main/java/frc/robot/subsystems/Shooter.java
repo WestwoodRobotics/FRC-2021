@@ -140,7 +140,8 @@ private CANSparkMax shooterMotor2;
   if (degreesHorizontal > C_ACTUATOR_MAX_DEG) {degreesHorizontal = C_ACTUATOR_MAX_DEG;}  
   double degrees = 90 - degreesHorizontal;// Step 1
   degrees += C_DEGREES_DIFFERENCE;// Step 2 to 3
-  double totalRadius = Math.sqrt( (Math.pow(C_CENTER_DISTANCE_CM, 2) *  Math.pow(C_HOOD_RADIUS_CM, 2)) - (2 * C_CENTER_DISTANCE_CM * C_HOOD_RADIUS_CM * Math.cos(degrees)) );// Step 6
+  double radians = Math.toRadians(degrees)
+  double totalRadius = Math.sqrt( (Math.pow(C_CENTER_DISTANCE_CM, 2) *  Math.pow(C_HOOD_RADIUS_CM, 2)) - (2 * C_CENTER_DISTANCE_CM * C_HOOD_RADIUS_CM * Math.cos(radians)) );// Step 6
   double actuatorExtension = totalRadius - C_ACTUATOR_RETRACTED_CM;
   actuatorExtension /= C_ACTUATOR_EXTENSION_CM;
   actuator.setPosition(actuatorExtension);
