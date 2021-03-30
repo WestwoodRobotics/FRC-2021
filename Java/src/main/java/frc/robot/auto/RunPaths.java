@@ -36,7 +36,7 @@ public class RunPaths extends SequentialCommandGroup {
     for(Object t : trajectories){
       addCommands(
         new InstantCommand(() -> s_driveTrain.resetOdometry(((Trajectory)t).getInitialPose())),
-        s_driveTrain.getTrajectoryCommand(.75, .5, (Trajectory)t)
+        s_driveTrain.getTrajectoryCommand(0.75, .5, (Trajectory)t)
       );
     }
   }
