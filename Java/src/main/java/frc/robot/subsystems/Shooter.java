@@ -4,7 +4,25 @@
 
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.ShooterConstants.*;
+import static frc.robot.Constants.ShooterConstants.C_ACTUATOR_EXTENSION_CM;
+import static frc.robot.Constants.ShooterConstants.C_ACTUATOR_MAX_DEG;
+import static frc.robot.Constants.ShooterConstants.C_ACTUATOR_MIN_DEG;
+import static frc.robot.Constants.ShooterConstants.C_ACTUATOR_RETRACTED_CM;
+import static frc.robot.Constants.ShooterConstants.C_CENTER_DISTANCE_CM;
+import static frc.robot.Constants.ShooterConstants.C_DEGREES_DIFFERENCE;
+import static frc.robot.Constants.ShooterConstants.C_HOOD_RADIUS_CM;
+import static frc.robot.Constants.ShooterConstants.C_SHOOTER_SPEED_CLOSE;
+import static frc.robot.Constants.ShooterConstants.C_SHOOTER_SPEED_FAR;
+import static frc.robot.Constants.ShooterConstants.C_SHOOTER_SPEED_TOLERANCE;
+import static frc.robot.Constants.ShooterConstants.C_kA;
+import static frc.robot.Constants.ShooterConstants.C_kD;
+import static frc.robot.Constants.ShooterConstants.C_kI;
+import static frc.robot.Constants.ShooterConstants.C_kP;
+import static frc.robot.Constants.ShooterConstants.C_kS;
+import static frc.robot.Constants.ShooterConstants.C_kV;
+import static frc.robot.Constants.ShooterConstants.P_ACTUATOR;
+import static frc.robot.Constants.ShooterConstants.P_SHOOTER_spMAX_1;
+import static frc.robot.Constants.ShooterConstants.P_SHOOTER_spMAX_2;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -120,18 +138,20 @@ private CANSparkMax shooterMotor2;
 
  public void increaseLength()// Used for testing
  {
-  if (actuatorPos < 25.0) {actuatorPos += 3;} 
+  if (actuatorPos < 40.0) {actuatorPos += 3;} 
   //actuator.setPosition(actuatorPos);
   //actuator.setSpeed(1);
   this.setDegrees(actuatorPos);
+  SmartDashboard.putNumber("Degrees above horizontal", actuatorPos);
  }
 
  public void decreaseLength()// Also used for testing
  {
-  if (actuatorPos > 0.0) {actuatorPos -= 3;} 
+  if (actuatorPos > 15.0) {actuatorPos -= 3;} 
   //actuator.setPosition(actuatorPos);
   //actuator.setSpeed(-1);
   this.setDegrees(actuatorPos);
+  SmartDashboard.putNumber("Degrees above horizontal", actuatorPos);
  }
 
  public void setDegrees(double degreesHorizontal)// Set degrees above horizontal. https://docs.google.com/document/d/1j0m0NdNlVOw_fCRlhDM2ct6ic74NRDTYBwbQS5yPkpQ/edit?usp=sharing
@@ -139,11 +159,14 @@ private CANSparkMax shooterMotor2;
   if (degreesHorizontal < C_ACTUATOR_MIN_DEG) {degreesHorizontal = C_ACTUATOR_MIN_DEG;}
   if (degreesHorizontal > C_ACTUATOR_MAX_DEG) {degreesHorizontal = C_ACTUATOR_MAX_DEG;}  
   double degrees = 90 - degreesHorizontal;// Step 1
-  degrees += C_DEGREES_DIFFERENCE;// Step 2 to 3
-  double radians = Math.toRadians(degrees)
-  double totalRadius = Math.sqrt( (Math.pow(C_CENTER_DISTANCE_CM, 2) *  Math.pow(C_HOOD_RADIUS_CM, 2)) - (2 * C_CENTER_DISTANCE_CM * C_HOOD_RADIUS_CM * Math.cos(radians)) );// Step 6
+  degrees -= C_DEGREES_DIFFERENCE;// Step 2 to 3
+  SmartDashboard.putNumber("Degrees", degrees);
+  double radians = Math.toRadians(degrees);
+  double totalRadius = Math.sqrt( (Math.pow(C_CENTER_DISTANCE_CM, 2) +  Math.pow(C_HOOD_RADIUS_CM, 2)) - (2 * C_CENTER_DISTANCE_CM * C_HOOD_RADIUS_CM * Math.cos(radians)) );// Step 6
+  SmartDashboard.putNumber("Total Radius", totalRadius);
   double actuatorExtension = totalRadius - C_ACTUATOR_RETRACTED_CM;
   actuatorExtension /= C_ACTUATOR_EXTENSION_CM;
+  SmartDashboard.putNumber("Actuator extension", actuatorExtension);
   actuator.setPosition(actuatorExtension);
  }
 
