@@ -79,14 +79,14 @@ public final class Constants {
                                     C_ACTUATOR_MIN_PWM_MS = 1050, // About 1 second, the minimum PMW value
                                     C_ACTUATOR_MAX_PWM_MS = 1950, // About 2 second, the maximum PMW value
 
-                                    C_ACTUATOR_MIN_DEG = 15, // Above the horizontal
-                                    C_ACTUATOR_MAX_DEG = 40,
+                                    C_ACTUATOR_MIN_DEG = 6, // Above the horizontal
+                                    C_ACTUATOR_MAX_DEG = 37,
 
                                     C_ACTUATOR_RETRACTED_CM = 23.65,
                                     C_ACTUATOR_EXTENSION_CM = (14), // 140 mm extension model; needed?
                                     C_HOOD_RADIUS_CM = 26,
                                     C_CENTER_DISTANCE_CM = 38,
-                                    C_DEGREES_DIFFERENCE = 42;
+                                    C_DEGREES_DIFFERENCE = 15;
 
 
         

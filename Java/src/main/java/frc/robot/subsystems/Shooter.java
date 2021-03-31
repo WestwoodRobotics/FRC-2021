@@ -138,7 +138,7 @@ private CANSparkMax shooterMotor2;
 
  public void increaseLength()// Used for testing
  {
-  if (actuatorPos < 40.0) {actuatorPos += 3;} 
+  if (actuatorPos < C_ACTUATOR_MAX_DEG) {actuatorPos += 3;} 
   //actuator.setPosition(actuatorPos);
   //actuator.setSpeed(1);
   this.setDegrees(actuatorPos);
@@ -147,10 +147,11 @@ private CANSparkMax shooterMotor2;
 
  public void decreaseLength()// Also used for testing
  {
-  if (actuatorPos > 15.0) {actuatorPos -= 3;} 
+  if (actuatorPos > C_ACTUATOR_MIN_DEG) {actuatorPos -= 3;} 
   //actuator.setPosition(actuatorPos);
   //actuator.setSpeed(-1);
   this.setDegrees(actuatorPos);
+  //actuator.setPosition(0);
   SmartDashboard.putNumber("Degrees above horizontal", actuatorPos);
  }
 
