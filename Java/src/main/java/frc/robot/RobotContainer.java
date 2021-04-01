@@ -39,6 +39,10 @@ public class RobotContainer {
 
   private RunPaths barrelPath;
   private RunPaths bouncePath;
+  private RunPaths blueA;
+  private RunPaths redA;
+  private RunPaths blueB;
+  private RunPaths redB;
 
   // Joysticks
   //private final Joystick joy = new Joystick(0); 
@@ -134,6 +138,41 @@ public class RobotContainer {
     }
     
     barrelPath = new RunPaths(s_driveTrain, List.of(barrelTraj));
+    
+  }
+
+  public void loadGalacticSearch(){
+    String pathABlueStr = "paths/PathABlue.wpilib.json";
+    String pathARedStr = "paths/PathARed.wpilib.json";
+    String pathBBlueStr = "paths/PathBBlue.wpilib.json";
+    String pathBRedStr = "paths/PathBRed.wpilib.json";
+
+    Trajectory pathABlueTraj = new Trajectory();
+    Trajectory pathARedTraj = new Trajectory();
+    Trajectory pathBBlueTraj = new Trajectory();
+    Trajectory pathBRedTraj = new Trajectory();
+
+    try {
+      Path pathABlue = Filesystem.getDeployDirectory().toPath().resolve(pathABlueStr);
+      pathABlueTraj = TrajectoryUtil.fromPathweaverJson(pathABlue);
+
+      Path pathARed = Filesystem.getDeployDirectory().toPath().resolve(pathARedStr);
+      pathARedTraj = TrajectoryUtil.fromPathweaverJson(pathARed);
+
+      Path pathBBlue = Filesystem.getDeployDirectory().toPath().resolve(pathBBlueStr);
+      pathBBlueTraj = TrajectoryUtil.fromPathweaverJson(pathBBlue);
+      
+      Path pathBRed = Filesystem.getDeployDirectory().toPath().resolve(pathBRedStr);
+      pathBRedTraj = TrajectoryUtil.fromPathweaverJson(pathBRed);
+
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + pathABlueStr, ex.getStackTrace());
+    }
+    
+    blueA = new RunPaths(s_driveTrain, List.of(pathABlueTraj));
+    blueB = new RunPaths(s_driveTrain, List.of(pathBBlueTraj));
+    redA = new RunPaths(s_driveTrain, List.of(pathARedTraj));
+    redB = new RunPaths(s_driveTrain, List.of(pathBRedTraj));
 
   }
 
@@ -171,6 +210,7 @@ public class RobotContainer {
       bounce3,
       bounce4
     ));
-
   }
+
+
 }
