@@ -72,6 +72,9 @@ public final class Constants {
             CLOSE,
             FAR;
         }
+
+        public static final double C_FLYWHEEL_DIAMETER_METERS = 0.1524;
+
         public static final double  C_SHOOTER_SPEED_CLOSE = 0,
                                     C_SHOOTER_SPEED_FAR = 0,
                                     C_SHOOTER_SPEED_TOLERANCE = 0,
@@ -87,6 +90,11 @@ public final class Constants {
                                     C_HOOD_RADIUS_CM = 26,
                                     C_CENTER_DISTANCE_CM = 38,
                                     C_DEGREES_DIFFERENCE = 15;
+
+        public static final double C_GOAL_HEIGHT_METERS = 2.49555,
+                                   C_SHOOT_HEIGHT_METERS = 0.889,
+                                   C_GOAL_APPROACH_DEGREES = 0,
+                                   C_GRAV_ACCEL = 9.8;
 
 
         
