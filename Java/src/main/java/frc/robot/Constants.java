@@ -62,9 +62,9 @@ public final class Constants {
                                 P_ACTUATOR = 0;
 
         public static final double C_kS = 0.14,
-                                   C_kV = 0.137,
+                                   C_kV = 0.130,
                                    C_kA = 0.0207,
-                                   C_kP = 0.005,
+                                   C_kP = 0.02,
                                    C_kI = 0,
                                    C_kD = 0;
         

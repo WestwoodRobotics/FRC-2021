@@ -8,9 +8,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.RunShooter;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Magazine;
@@ -31,7 +30,7 @@ public class RobotContainer {
   private final Shooter s_shooter;
 
   // Commands
-
+  
 
   // Joysticks
   //private final Joystick joy = new Joystick(0); 
@@ -63,6 +62,7 @@ public class RobotContainer {
     s_magazine = new Magazine();
 
     s_shooter = new Shooter();
+  
 
     s_driveTrain.setDefaultCommand(
       new TankDrive(
@@ -94,7 +94,8 @@ public class RobotContainer {
     mechLeftTrigger.whenPressed(() -> s_magazine.shiftBall()).whenReleased(() -> s_magazine.stopBall());
     mechRightTrigger.whenPressed(() -> s_magazine.feedBall()).whenReleased(() -> s_magazine.stopBall());
 
-    mechSquare.toggleWhenPressed(new StartEndCommand(() -> s_shooter.setShooterVelocityPID(4000), () -> s_shooter.stopShooter(), s_shooter));
+    mechSquare.toggleWhenPressed(new RunShooter(s_shooter, 2000));
+    //mechSquare.toggleWhenPressed(new StartEndCommand(new RunCommand(() -> s_shooter.setShooterVelocityPID(4000)), () -> s_shooter.stopShooter(), s_shooter));
 
   } 
 
