@@ -43,6 +43,7 @@ public class RobotContainer {
   private RunPaths redA;
   private RunPaths blueB;
   private RunPaths redB;
+  private RunPaths slalom;
 
   // Joysticks
   //private final Joystick joy = new Joystick(0); 
@@ -124,7 +125,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return bouncePath;
+    return slalom;
   }
 
   public void loadBarrel(){
@@ -174,6 +175,7 @@ public class RobotContainer {
     redA = new RunPaths(s_driveTrain, List.of(pathARedTraj));
     redB = new RunPaths(s_driveTrain, List.of(pathBRedTraj));
 
+
   }
 
   public void loadBounce(){
@@ -210,6 +212,20 @@ public class RobotContainer {
       bounce3,
       bounce4
     ));
+  }
+
+  public void loadSlalom(){
+    String trajectoryJSON = "paths/SlalomPath.wpilib.json";
+    Trajectory slalomTraj = new Trajectory();
+    try {
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+      slalomTraj = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+    }
+    
+    slalom = new RunPaths(s_driveTrain, List.of(slalomTraj));
+    
   }
 
 

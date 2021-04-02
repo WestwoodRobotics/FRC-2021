@@ -30,6 +30,8 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     m_robotContainer.loadBarrel();
     m_robotContainer.loadBounce();
+    m_robotContainer.loadGalacticSearch();
+    m_robotContainer.loadSlalom();
   }
 
   /**
