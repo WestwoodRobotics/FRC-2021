@@ -3,7 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import static frc.robot.Constants.IntakeConstants.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,7 +15,7 @@ public class Intake extends SubsystemBase {
   private Solenoid intakeSol1 = new Solenoid(P_INTAKE_sol_1);
 
   public Intake() {
-    intakeSol1.set(false);
+    intakeSol1.set(true);
     intakeMotor1.setInverted(true);
   }
   

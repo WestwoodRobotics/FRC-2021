@@ -65,7 +65,7 @@ public class RobotContainer {
       )
     );
 
-    s_magazine.setDefaultCommand(
+    /*s_magazine.setDefaultCommand(
       new RunCommand(
         () -> {
           if (mechLeftTrigger.get()){
@@ -77,7 +77,7 @@ public class RobotContainer {
         },
         s_magazine
       )
-    );
+    );*/
     
     // s_driveTrain.setDefaultCommand(
     //   new TankDrive(

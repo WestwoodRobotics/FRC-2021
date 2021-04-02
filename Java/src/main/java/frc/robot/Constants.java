@@ -59,7 +59,7 @@ public final class Constants {
     public static final class IntakeConstants{
         public static final int P_INTAKE_talSRX_1 = 0;
         
-        public static final int P_INTAKE_sol_1 = 4;
+        public static final int P_INTAKE_sol_1 = 0;
         //public static final int P_INTAKE_sol_2 = 0;
 
         public static final double C_INTAKE_SPEED = 1.0;
@@ -95,7 +95,7 @@ public final class Constants {
 
     public static final class MagazineConstants{
         public static final int //P_MAGAZINE_vicSPX_1 = 8,
-                                P_MAGAZINE_talSRX_2 = 9;
+                                P_MAGAZINE_talSRX_2 = 5;
     }
 
 }
