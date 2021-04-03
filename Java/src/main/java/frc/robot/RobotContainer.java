@@ -24,6 +24,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.auto.RunPaths;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Magazine;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -36,7 +39,10 @@ public class RobotContainer {
 
   // Subsystems
   private final DriveTrain s_driveTrain;
-  //private final Magazine s_magazine;
+
+  private final Magazine s_magazine;
+  private final Intake s_intake;
+
   // Commands
 
   private Command barrelPath;
@@ -61,6 +67,8 @@ public class RobotContainer {
   // Y-box controller triggers, bumpers, buttons
   private final JoystickButton mechRightBumper = new JoystickButton(mechJoy, 6);
   private final JoystickButton mechLeftTrigger = new JoystickButton(mechJoy, 7);
+  private final JoystickButton mechTriangle = new JoystickButton(mechJoy,4);
+  private final JoystickButton mechCross = new JoystickButton(mechJoy,1);
 
   //private final JoystickButton rightTrig = new JoystickButton(joy, 8);
   //private final Joystick rightJoy = new Joystick(1);
@@ -68,7 +76,8 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     s_driveTrain = new DriveTrain();
-    //s_magazine = new Magazine();
+    s_magazine = new Magazine();
+    s_intake = new Intake();
 
     s_driveTrain.setDefaultCommand(
       new TankDrive(
@@ -112,10 +121,11 @@ public class RobotContainer {
   private void configureButtonBindings() {
       
     rightTrig.whenPressed(() -> s_driveTrain.toggleSlowMode());
-    rightTrig.whenPressed(new RunCommand(() -> s_driveTrain.setVelocityPID(0.5, 0.5)));
+    //rightTrig.whenPressed(new RunCommand(() -> s_driveTrain.setVelocityPID(0.5, 0.5)));
     //rightTrig.whenPressed(new DriveDistanceProfiledPID(s_driveTrain, 5, 0, 1, 1));
     (new JoystickButton(rightJoy, 2)).whenActive(new InstantCommand(() -> s_driveTrain.config()));
-
+    mechCross.whenPressed(() -> s_intake.togglePiston()); 
+    mechTriangle.whenPressed(() -> s_intake.intakeIn()).whenReleased(() -> s_intake.intakeStop());
     //mechLeftTrigger.whenPressed(() -> s_magazine.shiftBall()).whenReleased(() -> s_magazine.stopBall());
   } 
 

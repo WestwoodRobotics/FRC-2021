@@ -15,10 +15,10 @@ package frc.robot;
 public final class Constants {
 
     public static final class DriveConstants{
-        public static final int P_DRIVE_LEFT_MASTER_talSRX = 3,
-                                P_DRIVE_LEFT_FOLLOW_vicSPX = 1,
-                                P_DRIVE_RIGHT_MASTER_talSRX = 2,
-                                P_DRIVE_RIGHT_FOLLOW_vicSPX = 4;
+        public static final int P_DRIVE_LEFT_MASTER = 0,
+                                P_DRIVE_LEFT_FOLLOW = 1,
+                                P_DRIVE_RIGHT_MASTER = 3,
+                                P_DRIVE_RIGHT_FOLLOW = 2;
 
         // Feedforward for FTC Mats
         // public static final double C_kS = 1.44,
@@ -65,10 +65,20 @@ public final class Constants {
             return meters * 2/C_TRACK_WIDTH_METERS;
         }
     }
+    
+    public static final class IntakeConstants{
+        public static final int P_INTAKE_talSRX_1 = 0;
+        
+        public static final int P_INTAKE_sol_1 = 0;
+        //public static final int P_INTAKE_sol_2 = 0;
 
-    public static final class ShooterConstants{
+        public static final double C_INTAKE_SPEED = 1.0;
+    }
+
+    public static final class ShooterConstants{// TODO Set motor ports
         public static final int P_SHOOTER_spMAX_1 = 0,
-                                P_SHOOTER_spMAX_2 = 0;
+                                P_SHOOTER_spMAX_2 = 0,
+                                P_ACTUATOR = 0;
 
         public static final double C_kS = 0,
                                    C_kV = 0,
@@ -76,11 +86,26 @@ public final class Constants {
                                    C_kP = 0,
                                    C_kI = 0,
                                    C_kD = 0;
+        
+        public static enum E_SHOOTER_POS{
+            CLOSE,
+            FAR;
+        }
+        public static final double  C_SHOOTER_SPEED_CLOSE = 0,
+                                    C_SHOOTER_SPEED_FAR = 0,
+                                    C_SHOOTER_SPEED_TOLERANCE = 0,
+
+                                    C_ACTUATOR_MIN_PWM_MS = 1050, // About 1 second, the minimum PMW value
+                                    C_ACTUATOR_MAX_PWM_MS = 1950, // About 2 second, the maximum PMW value
+
+                                    C_ACTUATOR_MIN_DEG = 0, // Do the math nerd
+                                    C_ACTUATOR_MAX_DEG = 0;
+        
     }
 
     public static final class MagazineConstants{
         public static final int //P_MAGAZINE_vicSPX_1 = 8,
-                                P_MAGAZINE_talSRX_2 = 9;
+                                P_MAGAZINE_talSRX_2 = 5;
     }
 
 }
