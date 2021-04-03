@@ -125,20 +125,29 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return slalom;
+    return barrelPath;
   }
 
   public void loadBarrel(){
-    String trajectoryJSON = "paths/BarrelTest.wpilib.json";
-    Trajectory barrelTraj = new Trajectory();
+
+    String barrel1File = "paths/BarrelTest1.wpilib.json";
+    String barrel2File = "paths/BarrelTest2.wpilib.json";
+
+    Trajectory barrel1 = new Trajectory();
+    Trajectory barrel2 = new Trajectory();
+
     try {
-      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-      barrelTraj = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      Path barrel1Path = Filesystem.getDeployDirectory().toPath().resolve(barrel1File);
+      barrel1 = TrajectoryUtil.fromPathweaverJson(barrel1Path);
+
+      Path barrel2Path = Filesystem.getDeployDirectory().toPath().resolve(barrel2File);
+      barrel2 = TrajectoryUtil.fromPathweaverJson(barrel2Path);
+
     } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+      DriverStation.reportError("Unable to open trajectory: " + barrel1File, ex.getStackTrace());
     }
     
-    barrelPath = new RunPaths(s_driveTrain, List.of(barrelTraj));
+    barrelPath = new RunPaths(s_driveTrain, List.of(barrel1, barrel2));
     
   }
 
