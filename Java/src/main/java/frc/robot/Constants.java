@@ -25,10 +25,13 @@ public final class Constants {
         //                            C_kV = 3.26,
         //                            C_kA = 0.693;
         
-        // Feedforward for Tile
-        public static final double C_kS = 1.12,
+        // Feedforward for Tile, Testbot
+        /*public static final double C_kS = 1.12,
                                    C_kV = 3.08,
-                                   C_kA = 0.622;
+                                   C_kA = 0.622;*/
+        public static final double C_kS = 0.653,
+                                   C_kV = 0.893,
+                                   C_kA = 0.13;
 
         // Left PID                               
         public static final double C_kP_LEFT = 5,//8,

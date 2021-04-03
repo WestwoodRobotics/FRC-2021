@@ -79,7 +79,7 @@ public class RobotContainer {
 
     s_driveTrain.setDefaultCommand(
       new TankDrive(
-        () -> -leftJoy.getY(),
+        () -> leftJoy.getY(),
         () -> rightJoy.getY(),
         s_driveTrain
       )
@@ -119,7 +119,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
       
     rightTrig.whenPressed(() -> s_driveTrain.toggleSlowMode());
-    //rightTrig.whenPressed(new RunCommand(() -> s_driveTrain.setVelocityPID(0.5, 0.5)));
+    rightTrig.whenPressed(new RunCommand(() -> s_driveTrain.setVelocityPID(0.5, 0.5)));
     //rightTrig.whenPressed(new DriveDistanceProfiledPID(s_driveTrain, 5, 0, 1, 1));
     (new JoystickButton(rightJoy, 2)).whenActive(new InstantCommand(() -> s_driveTrain.config()));
     mechCross.whenPressed(() -> s_intake.togglePiston()); 

@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -98,7 +99,7 @@ public class DriveTrain extends SubsystemBase {
         //SmartDashboard.putNumber("volts", leftMaster.getMotorOutputVoltage());
         
         drive.feed();
-        this.driveWheelsVolts(leftVolts, rightVolts);
+        this.driveWheelsVolts(-leftVolts, rightVolts);
         
     }
 
@@ -111,16 +112,21 @@ public class DriveTrain extends SubsystemBase {
         rightMaster.setInverted(true);
         rightFollow.setInverted(true);
         
+        leftMaster.setInverted(true);
+        leftFollow.setInverted(true);
+
         leftFollow.follow(leftMaster);
         rightFollow.follow(rightMaster);
         
+        //leftMaster.setSensorPhase(false);
+
         drive.setSafetyEnabled(true);
         
         zeroLeftEncoder();
         zeroRightEncoder();
 
-        leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        leftMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        rightMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         
         //this.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
         
@@ -156,20 +162,20 @@ public class DriveTrain extends SubsystemBase {
     // Encoder functions
 
     // Ticks
-    public double leftEncoderGetTicks(){return leftMaster.getSelectedSensorPosition();}
+    public double leftEncoderGetTicks(){return -leftMaster.getSelectedSensorPosition();}
     public double rightEncoderGetTicks(){return rightMaster.getSelectedSensorPosition();}
     
     // Meters
-    public double leftEncoderGetMeters(){return ticksToMeters(leftMaster.getSelectedSensorPosition());}
-    public double rightEncoderGetMeters(){return ticksToMeters(rightMaster.getSelectedSensorPosition());}
+    public double leftEncoderGetMeters(){return ticksToMeters(leftEncoderGetTicks());}
+    public double rightEncoderGetMeters(){return ticksToMeters(rightEncoderGetTicks());}
     
     // Ticks per 100 ms
-    public double leftEncoderVelTicks(){return leftMaster.getSelectedSensorVelocity();}
+    public double leftEncoderVelTicks(){return -leftMaster.getSelectedSensorVelocity();}
     public double rightEncoderVelTicks(){return rightMaster.getSelectedSensorVelocity();}
 
     // Meters per s
-    public double leftEncoderVelMeters(){return ticksToMeters(leftMaster.getSelectedSensorVelocity())*10;}
-    public double rightEncoderVelMeters(){return ticksToMeters(rightMaster.getSelectedSensorVelocity())*10;}
+    public double leftEncoderVelMeters(){return ticksToMeters(leftEncoderVelTicks())*10;}
+    public double rightEncoderVelMeters(){return ticksToMeters(rightEncoderVelTicks())*10;}
 
     // Average of both wheels
     public double getAverageEncoderTicks()    {return (leftEncoderGetTicks() + rightEncoderGetTicks())/2.0;}
@@ -257,7 +263,7 @@ public class DriveTrain extends SubsystemBase {
         
         SmartDashboard.putNumber("leftvel", this.leftEncoderVelMeters());
         SmartDashboard.putNumber("rightvel", this.rightEncoderVelMeters());
-        
+        //System.out.println(this.leftEncoderVelMeters());
 
         odometry.update(
                 Rotation2d.fromDegrees(this.getHeadingDegrees()), 
