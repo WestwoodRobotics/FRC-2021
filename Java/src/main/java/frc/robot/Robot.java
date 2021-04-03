@@ -30,8 +30,15 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    m_robotContainer.loadBarrel();
+    m_robotContainer.loadBounce();
+    m_robotContainer.loadGalacticSearch();
+    m_robotContainer.loadSlalom();
+
     comp = new Compressor();
     comp.setClosedLoopControl(true);
+
   }
 
   /**
@@ -69,7 +76,7 @@ public class Robot extends TimedRobot {
     //   m_autonomousCommand.schedule();
     // }
 
-    
+    m_robotContainer.getAutonomousCommand().schedule();
   }
 
   /** This function is called periodically during autonomous. */

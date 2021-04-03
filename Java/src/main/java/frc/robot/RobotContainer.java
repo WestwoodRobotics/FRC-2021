@@ -4,16 +4,27 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.auto.RunPaths;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Magazine;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -26,10 +37,19 @@ public class RobotContainer {
 
   // Subsystems
   private final DriveTrain s_driveTrain;
+
   private final Magazine s_magazine;
   private final Intake s_intake;
+
   // Commands
 
+  private RunPaths barrelPath;
+  private RunPaths bouncePath;
+  private RunPaths blueA;
+  private RunPaths redA;
+  private RunPaths blueB;
+  private RunPaths redB;
+  private RunPaths slalom;
 
   // Joysticks
   //private final Joystick joy = new Joystick(0); 
@@ -113,8 +133,119 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand() {
-  //   // An ExampleCommand will run in autonomous
-  //   return m_autoCommand;
-  // }
+  public Command getAutonomousCommand() {
+    // An ExampleCommand will run in autonomous
+    return barrelPath;
+  }
+
+  public void loadBarrel(){
+
+    String barrel1File = "paths/BarrelTest1.wpilib.json";
+    String barrel2File = "paths/BarrelTest2.wpilib.json";
+
+    Trajectory barrel1 = new Trajectory();
+    Trajectory barrel2 = new Trajectory();
+
+    try {
+      Path barrel1Path = Filesystem.getDeployDirectory().toPath().resolve(barrel1File);
+      barrel1 = TrajectoryUtil.fromPathweaverJson(barrel1Path);
+
+      Path barrel2Path = Filesystem.getDeployDirectory().toPath().resolve(barrel2File);
+      barrel2 = TrajectoryUtil.fromPathweaverJson(barrel2Path);
+
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + barrel1File, ex.getStackTrace());
+    }
+    
+    barrelPath = new RunPaths(s_driveTrain, List.of(barrel1, barrel2));
+    
+  }
+
+  public void loadGalacticSearch(){
+    String pathABlueStr = "paths/PathABlue.wpilib.json";
+    String pathARedStr = "paths/PathARed.wpilib.json";
+    String pathBBlueStr = "paths/PathBBlue.wpilib.json";
+    String pathBRedStr = "paths/PathBRed.wpilib.json";
+
+    Trajectory pathABlueTraj = new Trajectory();
+    Trajectory pathARedTraj = new Trajectory();
+    Trajectory pathBBlueTraj = new Trajectory();
+    Trajectory pathBRedTraj = new Trajectory();
+
+    try {
+      Path pathABlue = Filesystem.getDeployDirectory().toPath().resolve(pathABlueStr);
+      pathABlueTraj = TrajectoryUtil.fromPathweaverJson(pathABlue);
+
+      Path pathARed = Filesystem.getDeployDirectory().toPath().resolve(pathARedStr);
+      pathARedTraj = TrajectoryUtil.fromPathweaverJson(pathARed);
+
+      Path pathBBlue = Filesystem.getDeployDirectory().toPath().resolve(pathBBlueStr);
+      pathBBlueTraj = TrajectoryUtil.fromPathweaverJson(pathBBlue);
+      
+      Path pathBRed = Filesystem.getDeployDirectory().toPath().resolve(pathBRedStr);
+      pathBRedTraj = TrajectoryUtil.fromPathweaverJson(pathBRed);
+
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + pathABlueStr, ex.getStackTrace());
+    }
+    
+    blueA = new RunPaths(s_driveTrain, List.of(pathABlueTraj));
+    blueB = new RunPaths(s_driveTrain, List.of(pathBBlueTraj));
+    redA = new RunPaths(s_driveTrain, List.of(pathARedTraj));
+    redB = new RunPaths(s_driveTrain, List.of(pathBRedTraj));
+
+
+  }
+
+  public void loadBounce(){
+    String bounce1File = "paths/BounceTest1.wpilib.json";
+    String bounce2File = "paths/BounceTest2.wpilib.json";
+    String bounce3File = "paths/BounceTest3.wpilib.json";
+    String bounce4File = "paths/BounceTest4.wpilib.json";
+
+    Trajectory bounce1 = new Trajectory();
+    Trajectory bounce2 = new Trajectory();
+    Trajectory bounce3 = new Trajectory();
+    Trajectory bounce4 = new Trajectory();
+
+    try {
+      Path bounce1Path = Filesystem.getDeployDirectory().toPath().resolve(bounce1File);
+      bounce1 = TrajectoryUtil.fromPathweaverJson(bounce1Path);
+
+      Path bounce2Path = Filesystem.getDeployDirectory().toPath().resolve(bounce2File);
+      bounce2 = TrajectoryUtil.fromPathweaverJson(bounce2Path);
+
+      Path bounce3Path = Filesystem.getDeployDirectory().toPath().resolve(bounce3File);
+      bounce3 = TrajectoryUtil.fromPathweaverJson(bounce3Path);
+
+      Path bounce4Path = Filesystem.getDeployDirectory().toPath().resolve(bounce4File);
+      bounce4 = TrajectoryUtil.fromPathweaverJson(bounce4Path);
+
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + bounce1File, ex.getStackTrace());
+    }
+
+    bouncePath = new RunPaths(s_driveTrain, List.of(
+      bounce1,
+      bounce2,
+      bounce3,
+      bounce4
+    ));
+  }
+
+  public void loadSlalom(){
+    String trajectoryJSON = "paths/SlalomPath.wpilib.json";
+    Trajectory slalomTraj = new Trajectory();
+    try {
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+      slalomTraj = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+    }
+    
+    slalom = new RunPaths(s_driveTrain, List.of(slalomTraj));
+    
+  }
+
+
 }

@@ -20,24 +20,34 @@ public final class Constants {
                                 P_DRIVE_RIGHT_MASTER = 3,
                                 P_DRIVE_RIGHT_FOLLOW = 2;
 
-        // Feedforward
-        public static final double C_kS = 1.44,
-                                   C_kV = 3.26,
-                                   C_kA = 0.693;
+        // Feedforward for FTC Mats
+        // public static final double C_kS = 1.44,
+        //                            C_kV = 3.26,
+        //                            C_kA = 0.693;
         
+        // Feedforward for Tile
+        public static final double C_kS = 1.12,
+                                   C_kV = 3.08,
+                                   C_kA = 0.622;
+
         // Left PID                               
-        public static final double C_kP_LEFT = 10.4,
+        public static final double C_kP_LEFT = 5,//8,
                                    C_kI_LEFT = 0,
                                    C_kD_LEFT = 0;
         
         // Right PID
-        public static final double C_kP_RIGHT = 15.9,
+        public static final double C_kP_RIGHT = 5,//20,
                                    C_kI_RIGHT = 0,
                                    C_kD_RIGHT = 0;
 
         public static final double C_TRACK_WIDTH_METERS = 0.5588;
         public static final double C_DRIVE_EPR = 8192;
         public static final double C_WHEEL_DIAMETER_METERS = 0.1524;
+
+        public static final double C_MAX_VOLTAGE = 10.0;
+
+        public static final double C_kB_RAMSETE = 2.0,
+                                   C_kZ_RAMSETE = 0.7;
 
         public static double ticksToMeters(double ticks){
             return ticks*Math.PI*C_WHEEL_DIAMETER_METERS/C_DRIVE_EPR;
