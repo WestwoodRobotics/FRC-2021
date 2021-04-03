@@ -15,12 +15,12 @@ package frc.robot;
 public final class Constants {
 
     public static final class DriveConstants{
-        public static final int P_DRIVE_LEFT_MASTER = 3,
+        public static final int P_DRIVE_LEFT_MASTER = 0,
                                 P_DRIVE_LEFT_FOLLOW = 1,
-                                P_DRIVE_RIGHT_MASTER = 2,
-                                P_DRIVE_RIGHT_FOLLOW = 4;
+                                P_DRIVE_RIGHT_MASTER = 3,
+                                P_DRIVE_RIGHT_FOLLOW = 2;
 
-        // Feedforward for FTC Mats
+        // Feedforward for FTC Mats, Testbot
         // public static final double C_kS = 1.44,
         //                            C_kV = 3.26,
         //                            C_kA = 0.693;
@@ -34,17 +34,18 @@ public final class Constants {
                                    C_kA = 0.13;
 
         // Left PID                               
-        public static final double C_kP_LEFT = 5,//8,
+        public static final double C_kP_LEFT = 0,//8,
                                    C_kI_LEFT = 0,
                                    C_kD_LEFT = 0;
         
         // Right PID
-        public static final double C_kP_RIGHT = 5,//20,
+        public static final double C_kP_RIGHT = 0,//20,
                                    C_kI_RIGHT = 0,
                                    C_kD_RIGHT = 0;
 
         public static final double C_TRACK_WIDTH_METERS = 0.5588;
-        public static final double C_DRIVE_EPR = 8192;
+        public static final double C_GEARING = 10.75;
+        public static final double C_DRIVE_EPR = 2048;
         public static final double C_WHEEL_DIAMETER_METERS = 0.1524;
 
         public static final double C_MAX_VOLTAGE = 10.0;
@@ -53,11 +54,11 @@ public final class Constants {
                                    C_kZ_RAMSETE = 0.7;
 
         public static double ticksToMeters(double ticks){
-            return ticks*Math.PI*C_WHEEL_DIAMETER_METERS/C_DRIVE_EPR;
+            return ticks*Math.PI*C_WHEEL_DIAMETER_METERS/(C_DRIVE_EPR*C_GEARING);
         }
 
         public static double metersToTicks(double meters){
-            return meters*C_DRIVE_EPR/(Math.PI*C_WHEEL_DIAMETER_METERS);
+            return meters*C_DRIVE_EPR*C_GEARING/(Math.PI*C_WHEEL_DIAMETER_METERS);
         }
     
         public static double radiansToMeters(double radians){

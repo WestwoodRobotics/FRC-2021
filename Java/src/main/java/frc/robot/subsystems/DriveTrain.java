@@ -4,13 +4,30 @@
 
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.Constants.DriveConstants.C_MAX_VOLTAGE;
+import static frc.robot.Constants.DriveConstants.C_TRACK_WIDTH_METERS;
+import static frc.robot.Constants.DriveConstants.C_kA;
+import static frc.robot.Constants.DriveConstants.C_kB_RAMSETE;
+import static frc.robot.Constants.DriveConstants.C_kD_LEFT;
+import static frc.robot.Constants.DriveConstants.C_kD_RIGHT;
+import static frc.robot.Constants.DriveConstants.C_kI_LEFT;
+import static frc.robot.Constants.DriveConstants.C_kI_RIGHT;
+import static frc.robot.Constants.DriveConstants.C_kP_LEFT;
+import static frc.robot.Constants.DriveConstants.C_kP_RIGHT;
+import static frc.robot.Constants.DriveConstants.C_kS;
+import static frc.robot.Constants.DriveConstants.C_kV;
+import static frc.robot.Constants.DriveConstants.C_kZ_RAMSETE;
+import static frc.robot.Constants.DriveConstants.P_DRIVE_LEFT_FOLLOW;
+import static frc.robot.Constants.DriveConstants.P_DRIVE_LEFT_MASTER;
+import static frc.robot.Constants.DriveConstants.P_DRIVE_RIGHT_FOLLOW;
+import static frc.robot.Constants.DriveConstants.P_DRIVE_RIGHT_MASTER;
+import static frc.robot.Constants.DriveConstants.metersToTicks;
+import static frc.robot.Constants.DriveConstants.ticksToMeters;
 
 import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -54,8 +71,8 @@ public class DriveTrain extends SubsystemBase {
 
     private AHRS imu = new AHRS();
 
-
     private boolean slowMode = false;
+    private boolean straightMode = false;
 
     /** Creates a new DriveTrain. */
     public DriveTrain() {
@@ -65,7 +82,7 @@ public class DriveTrain extends SubsystemBase {
 
     // Drives wheels at percentage from [-1.0, +1.0]
     public void driveWheelsPercent(double leftPercent, double rightPercent){
-        drive.tankDrive(0.9*leftPercent, rightPercent);
+        drive.tankDrive(leftPercent, rightPercent, true);
     }
 
     // Drives wheels at voltage
@@ -99,7 +116,7 @@ public class DriveTrain extends SubsystemBase {
         //SmartDashboard.putNumber("volts", leftMaster.getMotorOutputVoltage());
         
         drive.feed();
-        this.driveWheelsVolts(-leftVolts, rightVolts);
+        this.driveWheelsVolts(leftVolts, rightVolts);
         
     }
 
@@ -112,8 +129,8 @@ public class DriveTrain extends SubsystemBase {
         rightMaster.setInverted(true);
         rightFollow.setInverted(true);
         
-        leftMaster.setInverted(true);
-        leftFollow.setInverted(true);
+        leftMaster.setInverted(false);
+        leftFollow.setInverted(false);
 
         leftFollow.follow(leftMaster);
         rightFollow.follow(rightMaster);
@@ -159,10 +176,23 @@ public class DriveTrain extends SubsystemBase {
         this.setSlowMode(!this.getSlowMode());
     }
 
+
+    public void setStraightMode(boolean straightMode) {
+        this.straightMode = straightMode;
+    }
+    public boolean getStraightMode(){
+        return straightMode; 
+    }
+
+    public void toggleStraightMode(){
+        this.setStraightMode(!this.getStraightMode());
+    }
+    
+
     // Encoder functions
 
     // Ticks
-    public double leftEncoderGetTicks(){return -leftMaster.getSelectedSensorPosition();}
+    public double leftEncoderGetTicks(){return leftMaster.getSelectedSensorPosition();}
     public double rightEncoderGetTicks(){return rightMaster.getSelectedSensorPosition();}
     
     // Meters
@@ -170,7 +200,7 @@ public class DriveTrain extends SubsystemBase {
     public double rightEncoderGetMeters(){return ticksToMeters(rightEncoderGetTicks());}
     
     // Ticks per 100 ms
-    public double leftEncoderVelTicks(){return -leftMaster.getSelectedSensorVelocity();}
+    public double leftEncoderVelTicks(){return leftMaster.getSelectedSensorVelocity();}
     public double rightEncoderVelTicks(){return rightMaster.getSelectedSensorVelocity();}
 
     // Meters per s
@@ -187,7 +217,7 @@ public class DriveTrain extends SubsystemBase {
     public void zeroRightEncoder(){rightMaster.setSelectedSensorPosition(0);}
 
     // Gyro functions
-    public double getHeadingDegrees()         {return -imu.pidGet();}
+    public double getHeadingDegrees()         {return -imu.getYaw();}
     public double getHeadingRadians()         {return Math.toRadians(this.getHeadingDegrees());}
     public double getTurnRate()               {return imu.getRate();} 
     public void   zeroHeading()               {imu.reset();}
@@ -263,7 +293,7 @@ public class DriveTrain extends SubsystemBase {
         
         SmartDashboard.putNumber("leftvel", this.leftEncoderVelMeters());
         SmartDashboard.putNumber("rightvel", this.rightEncoderVelMeters());
-        //System.out.println(this.leftEncoderVelMeters());
+        //System.out.println(-imu.getBoardYawAxis().board_axis.getValue());
 
         odometry.update(
                 Rotation2d.fromDegrees(this.getHeadingDegrees()), 
@@ -275,7 +305,7 @@ public class DriveTrain extends SubsystemBase {
 
         SmartDashboard.putNumber("x", odometry.getPoseMeters().getX());
         SmartDashboard.putNumber("y", odometry.getPoseMeters().getY());
-        SmartDashboard.putNumber("heading", odometry.getPoseMeters().getRotation().getRadians());
+        SmartDashboard.putNumber("heading", getHeadingDegrees());
         //leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         //rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         // This method will be called once per scheduler run
