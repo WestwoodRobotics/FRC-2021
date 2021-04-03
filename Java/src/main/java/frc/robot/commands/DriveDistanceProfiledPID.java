@@ -32,13 +32,14 @@ public class DriveDistanceProfiledPID extends ProfiledPIDCommand {
         // This uses the output
         (output, setpoint) -> {
           // Use the output (and setpoint, if desired) here
-          s_driveTrain.setVelocityPID(output, output);
+          s_driveTrain.setVelocityPID(-output, -output);
           SmartDashboard.putNumber("output", output);
         }, s_driveTrain);
 
     getController().disableContinuousInput();
     getController().setTolerance(0.1);
     addRequirements(s_driveTrain);
+    
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
   }

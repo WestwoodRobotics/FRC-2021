@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.auto.RunPaths;
+import frc.robot.commands.DriveDistanceProfiledPID;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
@@ -41,7 +43,7 @@ public class RobotContainer {
   private final DriveTrain s_driveTrain;
 
   private final Magazine s_magazine;
-  private final Intake s_intake;
+  //private final Intake s_intake;
 
   // Commands
 
@@ -77,7 +79,7 @@ public class RobotContainer {
   public RobotContainer() {
     s_driveTrain = new DriveTrain();
     s_magazine = new Magazine();
-    s_intake = new Intake();
+    //s_intake = new Intake();
 
     s_driveTrain.setDefaultCommand(
       new TankDrive(
@@ -124,8 +126,8 @@ public class RobotContainer {
     //rightTrig.whenPressed(new RunCommand(() -> s_driveTrain.setVelocityPID(0.5, 0.5)));
     //rightTrig.whenPressed(new DriveDistanceProfiledPID(s_driveTrain, 5, 0, 1, 1));
     (new JoystickButton(rightJoy, 2)).whenActive(new InstantCommand(() -> s_driveTrain.config()));
-    mechCross.whenPressed(() -> s_intake.togglePiston()); 
-    mechTriangle.whenPressed(() -> s_intake.intakeIn()).whenReleased(() -> s_intake.intakeStop());
+    //mechCross.whenPressed(() -> s_intake.togglePiston()); 
+    //mechTriangle.whenPressed(() -> s_intake.intakeIn()).whenReleased(() -> s_intake.intakeStop());
     //mechLeftTrigger.whenPressed(() -> s_magazine.shiftBall()).whenReleased(() -> s_magazine.stopBall());
   } 
 
@@ -147,14 +149,14 @@ public class RobotContainer {
 
     Trajectory barrel1 = new Trajectory();
     //Trajectory barrel2 = new Trajectory();
-    Command barrel2 = s_driveTrain.getTrajectoryCommand(
+    /*Command barrel2 = new DriveDistanceProfiledPID(s_driveTrain, 5, 0, 3, 1.75);/*s_driveTrain.getTrajectoryCommand(
       3, 
       1.75, 
       new Pose2d(6.117, -2.199, new Rotation2d(0.0)), 
       List.of(
-      null
+        new Translation2d(6.117, -2.199)
       ), 
-      new Pose2d(1.289, -1.87, new Rotation2d(0.0)));
+      new Pose2d(1.289, -1.87, new Rotation2d(0.0)));*/
 
     try {
       Path barrel1Path = Filesystem.getDeployDirectory().toPath().resolve(barrel1File);
@@ -165,7 +167,7 @@ public class RobotContainer {
       DriverStation.reportError("Unable to open trajectory: " + barrel1File, ex.getStackTrace());
     }
     
-    barrelPath = new RunPaths(s_driveTrain, List.of(barrel1)).andThen(barrel2);
+    barrelPath = new RunPaths(s_driveTrain, List.of(barrel1));//.andThen(barrel2);
     
   }
 
