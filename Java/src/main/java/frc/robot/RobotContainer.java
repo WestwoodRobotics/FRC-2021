@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,13 +39,13 @@ public class RobotContainer {
   //private final Magazine s_magazine;
   // Commands
 
-  private RunPaths barrelPath;
-  private RunPaths bouncePath;
-  private RunPaths blueA;
-  private RunPaths redA;
-  private RunPaths blueB;
-  private RunPaths redB;
-  private RunPaths slalom;
+  private Command barrelPath;
+  private Command bouncePath;
+  private Command blueA;
+  private Command redA;
+  private Command blueB;
+  private Command redB;
+  private Command slalom;
 
   // Joysticks
   //private final Joystick joy = new Joystick(0); 
@@ -131,23 +133,29 @@ public class RobotContainer {
   public void loadBarrel(){
 
     String barrel1File = "paths/BarrelTest1.wpilib.json";
-    String barrel2File = "paths/BarrelTest2.wpilib.json";
+
 
     Trajectory barrel1 = new Trajectory();
-    Trajectory barrel2 = new Trajectory();
+    //Trajectory barrel2 = new Trajectory();
+    Command barrel2 = s_driveTrain.getTrajectoryCommand(
+      3, 
+      1.75, 
+      new Pose2d(6.117, -2.199, new Rotation2d(0.0)), 
+      List.of(
+      null
+      ), 
+      new Pose2d(1.289, -1.87, new Rotation2d(0.0)));
 
     try {
       Path barrel1Path = Filesystem.getDeployDirectory().toPath().resolve(barrel1File);
       barrel1 = TrajectoryUtil.fromPathweaverJson(barrel1Path);
 
-      Path barrel2Path = Filesystem.getDeployDirectory().toPath().resolve(barrel2File);
-      barrel2 = TrajectoryUtil.fromPathweaverJson(barrel2Path);
 
     } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + barrel1File, ex.getStackTrace());
     }
     
-    barrelPath = new RunPaths(s_driveTrain, List.of(barrel1, barrel2));
+    barrelPath = new RunPaths(s_driveTrain, List.of(barrel1)).andThen(barrel2);
     
   }
 
