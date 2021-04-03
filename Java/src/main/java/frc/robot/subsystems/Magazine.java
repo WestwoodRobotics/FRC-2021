@@ -4,11 +4,12 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.DoubleSupplier;
+import static frc.robot.Constants.MagazineConstants.P_MAGAZINE_talSRX_1;
+import static frc.robot.Constants.MagazineConstants.P_MAGAZINE_talSRX_2;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import static frc.robot.Constants.MagazineConstants.*;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Magazine extends SubsystemBase {
@@ -22,6 +23,8 @@ public class Magazine extends SubsystemBase {
 
     shift.setInverted(true);
     feed.setInverted(true);
+
+    feed.setNeutralMode(NeutralMode.Brake);
   }
 
   public void shiftBall(){
