@@ -15,10 +15,10 @@ package frc.robot;
 public final class Constants {
 
     public static final class DriveConstants{
-        public static final int P_DRIVE_LEFT_MASTER = 0,
+        public static final int P_DRIVE_LEFT_MASTER = 3,
                                 P_DRIVE_LEFT_FOLLOW = 1,
-                                P_DRIVE_RIGHT_MASTER = 3,
-                                P_DRIVE_RIGHT_FOLLOW = 2;
+                                P_DRIVE_RIGHT_MASTER = 2,
+                                P_DRIVE_RIGHT_FOLLOW = 4;
 
         // Feedforward for FTC Mats
         // public static final double C_kS = 1.44,

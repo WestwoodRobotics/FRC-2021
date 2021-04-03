@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private Compressor comp;
+  //private Compressor comp;
   private RobotContainer m_robotContainer;
 
   /**
@@ -36,8 +36,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.loadGalacticSearch();
     m_robotContainer.loadSlalom();
 
-    comp = new Compressor();
-    comp.setClosedLoopControl(true);
+    //comp = new Compressor();
+    //comp.setClosedLoopControl(true);
 
   }
 
@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    SmartDashboard.putBoolean("Epiiiic", comp.enabled());
+    //SmartDashboard.putBoolean("Epiiiic", comp.enabled());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
