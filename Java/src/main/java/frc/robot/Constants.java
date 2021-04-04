@@ -80,36 +80,45 @@ public final class Constants {
     }
 
     public static final class ShooterConstants{// TODO Set motor ports
-        public static final int P_SHOOTER_spMAX_1 = 0,
-                                P_SHOOTER_spMAX_2 = 0,
+        public static final int P_SHOOTER_spMAX_1 = 7,
+                                P_SHOOTER_spMAX_2 = 8,
                                 P_ACTUATOR = 0;
 
-        public static final double C_kS = 0,
-                                   C_kV = 0,
-                                   C_kA = 0,
-                                   C_kP = 0,
+        public static final double C_kS = 0.14,
+                                   C_kV = 0.130,
+                                   C_kA = 0.0207,
+                                   C_kP = 0.02,
                                    C_kI = 0,
                                    C_kD = 0;
         
-        public static enum E_SHOOTER_POS{
-            CLOSE,
-            FAR;
-        }
-        public static final double  C_SHOOTER_SPEED_CLOSE = 0,
-                                    C_SHOOTER_SPEED_FAR = 0,
-                                    C_SHOOTER_SPEED_TOLERANCE = 0,
 
-                                    C_ACTUATOR_MIN_PWM_MS = 1050, // About 1 second, the minimum PMW value
+        public static final double C_FLYWHEEL_DIAMETER_METERS = 0.1524;
+
+        public static final double  C_ACTUATOR_MIN_PWM_MS = 1050, // About 1 second, the minimum PMW value
                                     C_ACTUATOR_MAX_PWM_MS = 1950, // About 2 second, the maximum PMW value
 
-                                    C_ACTUATOR_MIN_DEG = 0, // Do the math nerd
-                                    C_ACTUATOR_MAX_DEG = 0;
+                                    C_ACTUATOR_MIN_DEG = 6, // Above the horizontal
+                                    C_ACTUATOR_MAX_DEG = 37,
+
+                                    C_ACTUATOR_RETRACTED_CM = 23.65,
+                                    C_ACTUATOR_EXTENSION_CM = (14), // 140 mm extension model; needed?
+                                    C_HOOD_RADIUS_CM = 26,
+                                    C_CENTER_DISTANCE_CM = 38,
+                                    C_DEGREES_DIFFERENCE = 15;
+
+        public static final double C_GOAL_HEIGHT_METERS = 2.49555,
+                                   C_SHOOT_HEIGHT_METERS = 0.889,
+                                   C_GOAL_APPROACH_DEGREES = 0,
+                                   C_GRAV_ACCEL = 9.8;
+
+
         
     }
 
     public static final class MagazineConstants{
-        public static final int //P_MAGAZINE_vicSPX_1 = 8,
-                                P_MAGAZINE_talSRX_2 = 5;
+        public static final int P_MAGAZINE_talSRX_1 = 5,
+                                P_MAGAZINE_talSRX_2 = 6;
+
     }
 
 }
