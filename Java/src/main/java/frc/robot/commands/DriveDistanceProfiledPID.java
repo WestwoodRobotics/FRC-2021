@@ -39,6 +39,7 @@ public class DriveDistanceProfiledPID extends ProfiledPIDCommand {
     getController().disableContinuousInput();
     getController().setTolerance(0.1);
     addRequirements(s_driveTrain);
+    
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
   }
