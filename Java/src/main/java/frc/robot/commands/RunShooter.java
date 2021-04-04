@@ -5,30 +5,36 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.ShooterPose;
 
 public class RunShooter extends CommandBase {
   /** Creates a new RunShooter. */
   private Shooter s_shooter;
-  private double rpm;
+  private DriveTrain s_driveTrain;
 
-  public RunShooter(Shooter s_shooter, double rpm) {
-    addRequirements(s_shooter);
+  private ShooterPose newPose;
+
+  public RunShooter(Shooter s_shooter, DriveTrain s_driveTrain) {
+    addRequirements(s_shooter, s_driveTrain);
     this.s_shooter = s_shooter;
-    this.rpm = rpm;
+    this.s_driveTrain = s_driveTrain;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    s_shooter.setDegrees(s_shooter.getShooterPose().launchAngleDeg);
     s_shooter.stopShooter();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    s_shooter.setShooterVelocityPID(rpm);
+    //newPose = new ShooterPose();
+    s_shooter.setShooterPose(newPose);
   }
 
   // Called once the command ends or is interrupted.

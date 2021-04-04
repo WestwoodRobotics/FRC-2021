@@ -94,7 +94,7 @@ public class RobotContainer {
     mechLeftTrigger.whenPressed(() -> s_magazine.shiftBall()).whenReleased(() -> s_magazine.stopBall());
     mechRightTrigger.whenPressed(() -> s_magazine.feedBall()).whenReleased(() -> s_magazine.stopBall());
 
-    mechSquare.toggleWhenPressed(new RunShooter(s_shooter, 2000));
+    //mechSquare.toggleWhenPressed(new RunShooter(s_shooter, 2000));
     //mechSquare.toggleWhenPressed(new StartEndCommand(new RunCommand(() -> s_shooter.setShooterVelocityPID(4000)), () -> s_shooter.stopShooter(), s_shooter));
 
   } 

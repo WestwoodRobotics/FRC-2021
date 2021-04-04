@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ShooterConstants.E_SHOOTER_POS;
 
 public class Shooter extends SubsystemBase {
   // variables
@@ -24,10 +23,10 @@ public class Shooter extends SubsystemBase {
 
   private Servo actuator;
 
-  private double speedSetpoint = 0.0;
-  private E_SHOOTER_POS pos;
+  //private double speedSetpoint = 0.0;
+  //private double actuatorPos = 0.0;// Position 0.0 to 1.0
 
-  private double actuatorPos = 0.0;// Position 0.0 to 1.0
+  private ShooterPose currentPose = new ShooterPose(C_ACTUATOR_MAX_DEG, 0.0);
 
   // creating feedfoward and velocityPID objects
   private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(C_kS, C_kV, C_kA);
@@ -47,8 +46,6 @@ public class Shooter extends SubsystemBase {
     shooterMotor1.setInverted(true);
     shooterMotor2.follow(shooterMotor1, true);
 
-    pos = E_SHOOTER_POS.CLOSE;
-
     // Actuator stuff
 
     actuator = new Servo(P_ACTUATOR);
@@ -61,6 +58,7 @@ public class Shooter extends SubsystemBase {
 
   public void stopShooter() {
     shooterMotor1.stopMotor();
+    this.currentPose.setLaunchRPM(0.0);
   }
 
   public void setShooterPercentage(double percent) {
@@ -72,7 +70,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setShooterVelocityPID(double rpm) {
-    this.speedSetpoint = rpm;
+    this.currentPose.setLaunchRPM(rpm);
     double volt = 0;
 
     volt += feedforward.calculate(rpm / 60.0);
@@ -97,65 +95,45 @@ public class Shooter extends SubsystemBase {
     return shooterMotor1.getEncoder().getVelocity();
   }
 
-  public boolean isFlyWheelReady() {
-    return (Math.abs(this.getShooterVel() - this.speedSetpoint) < C_SHOOTER_SPEED_TOLERANCE);
-  }
-
   // Actuator
-
-  public void setLength(double length)// Takes in value 0.0 to 1.0
-  {
-    actuator.setPosition(length);
-  }
-
   public void increaseLength()// Used for testing
   {
-    if (actuatorPos < C_ACTUATOR_MAX_DEG) {
-      actuatorPos += 3;
+    if (this.currentPose.launchAngleExtension < C_ACTUATOR_MAX_DEG) {
+      this.currentPose.launchAngleDeg += 3;
     }
     // actuator.setPosition(actuatorPos);
     // actuator.setSpeed(1);
-    this.setDegrees(actuatorPos);
-    SmartDashboard.putNumber("Degrees above horizontal", actuatorPos);
+    this.setDegrees(this.currentPose.launchAngleDeg);
+    SmartDashboard.putNumber("Degrees above horizontal", this.currentPose.launchAngleDeg);
   }
 
   public void decreaseLength()// Also used for testing
   {
-    if (actuatorPos > C_ACTUATOR_MIN_DEG) {
-      actuatorPos -= 3;
+    if (this.currentPose.launchAngleDeg > C_ACTUATOR_MIN_DEG) {
+      this.currentPose.launchAngleDeg -= 3;
     }
     // actuator.setPosition(actuatorPos);
     // actuator.setSpeed(-1);
-    this.setDegrees(actuatorPos);
+    this.setDegrees(this.currentPose.launchAngleDeg);
     // actuator.setPosition(0);
-    SmartDashboard.putNumber("Degrees above horizontal", actuatorPos);
+    SmartDashboard.putNumber("Degrees above horizontal", this.currentPose.launchAngleDeg);
   }
 
   // Set degrees above horizontal.
   // https://docs.google.com/document/d/1j0m0NdNlVOw_fCRlhDM2ct6ic74NRDTYBwbQS5yPkpQ/edit?usp=sharing
   public void setDegrees(double degreesHorizontal){
-    if (degreesHorizontal < C_ACTUATOR_MIN_DEG) {
-      degreesHorizontal = C_ACTUATOR_MIN_DEG;
-    }
-    if (degreesHorizontal > C_ACTUATOR_MAX_DEG) {
-      degreesHorizontal = C_ACTUATOR_MAX_DEG;
-    }
-    double degrees = 90 - degreesHorizontal;// Step 1
-    degrees -= C_DEGREES_DIFFERENCE;// Step 2 to 3
-    SmartDashboard.putNumber("Degrees", degrees);
-    double radians = Math.toRadians(degrees);
-    double totalRadius = Math.sqrt((Math.pow(C_CENTER_DISTANCE_CM, 2) + Math.pow(C_HOOD_RADIUS_CM, 2))
-        - (2 * C_CENTER_DISTANCE_CM * C_HOOD_RADIUS_CM * Math.cos(radians)));// Step 6
-    SmartDashboard.putNumber("Total Radius", totalRadius);
-    double actuatorExtension = totalRadius - C_ACTUATOR_RETRACTED_CM;
-    actuatorExtension /= C_ACTUATOR_EXTENSION_CM;
-    SmartDashboard.putNumber("Actuator extension", actuatorExtension);
-    actuator.setPosition(actuatorExtension);
+    currentPose.setAngleDeg(degreesHorizontal);
+    actuator.setPosition(currentPose.launchAngleExtension);
   }
 
   public void setShooterPose(ShooterPose shooterPose){
-    setDegrees(shooterPose.launchAngleDeg);
-    setShooterVelocityPID(shooterPose.speedRPM);
+    this.currentPose = shooterPose;
+    updateShooterPose();
+  }
+
+  public void updateShooterPose(){
+    setDegrees(currentPose.launchAngleDeg);
+    setShooterVelocityPID(currentPose.speedRPM);
   }
 
   public ShooterPose distanceToDegrees(double metersFromGoal){
@@ -184,34 +162,79 @@ public class Shooter extends SubsystemBase {
     return new ShooterPose(launchAngleRadians, launchSpeedMPS, false, false);
   }
 
-  private class ShooterPose{
+  public ShooterPose getShooterPose(){
+    return this.currentPose;
+  }
+
+  public class ShooterPose{
     public double launchAngleDeg;
     public double launchAngleRad;
+    public double launchAngleExtension;
+    
     public double speedRPM;
     public double speedMPS;
 
     public ShooterPose(double launchAngle, double speed, boolean isDeg, boolean isRPM){
       if(isDeg == true){
-        this.launchAngleDeg = launchAngle;
-        this.launchAngleRad = Math.toRadians(launchAngle);
+        setAngleDeg(launchAngle);
       }
       else if(isDeg == false){
-        this.launchAngleRad = launchAngle;
-        this.launchAngleDeg = Math.toDegrees(launchAngle);
+        setAngleRad(launchAngle);
       }
 
       if(isRPM == true){
-        this.speedRPM = speed;
-        this.speedMPS = speed * C_FLYWHEEL_DIAMETER_METERS / 60.0;
+        setLaunchRPM(speed);
       }
       else if(isRPM == false){
-        this.speedMPS = speed;
-        this.speedRPM = speed * 60.0 / C_FLYWHEEL_DIAMETER_METERS;
+        setLaunchMPS(speed);
       }
     }
 
     public ShooterPose(double launchAngleDeg, double speedRPM){
       this(launchAngleDeg, speedRPM, false, true);
+    }
+
+    public double degreesToExtension(double degreesHorizontal){
+      if (degreesHorizontal < C_ACTUATOR_MIN_DEG) {
+        degreesHorizontal = C_ACTUATOR_MIN_DEG;
+      }
+      if (degreesHorizontal > C_ACTUATOR_MAX_DEG) {
+        degreesHorizontal = C_ACTUATOR_MAX_DEG;
+      }
+      double degrees = 90 - degreesHorizontal;// Step 1
+      degrees -= C_DEGREES_DIFFERENCE;// Step 2 to 3
+      SmartDashboard.putNumber("Degrees", degrees);
+      double radians = Math.toRadians(degrees);
+      double totalRadius = Math.sqrt((Math.pow(C_CENTER_DISTANCE_CM, 2) + Math.pow(C_HOOD_RADIUS_CM, 2))
+          - (2 * C_CENTER_DISTANCE_CM * C_HOOD_RADIUS_CM * Math.cos(radians)));// Step 6
+      SmartDashboard.putNumber("Total Radius", totalRadius);
+      double actuatorExtension = totalRadius - C_ACTUATOR_RETRACTED_CM;
+      actuatorExtension /= C_ACTUATOR_EXTENSION_CM;
+      SmartDashboard.putNumber("Actuator extension", actuatorExtension);
+      
+      return actuatorExtension;
+    }
+
+    public void setAngleDeg(double degrees){
+      this.launchAngleDeg = degrees;
+      this.launchAngleRad = Math.toRadians(degrees);
+      this.launchAngleExtension = degreesToExtension(this.launchAngleDeg);
+    }
+
+    public void setAngleRad(double rad){
+      this.launchAngleRad = rad;
+      this.launchAngleDeg = Math.toDegrees(rad);
+      this.launchAngleExtension = degreesToExtension(this.launchAngleDeg);
+    }
+
+    public void setLaunchRPM(double rpm){
+      this.speedRPM = rpm;
+      this.speedMPS = rpm * C_FLYWHEEL_DIAMETER_METERS / 60.0;
+    }
+
+    public void setLaunchMPS(double mps){
+      this.speedMPS = mps;
+      this.speedRPM = mps * 60.0 / C_FLYWHEEL_DIAMETER_METERS;
     }
   }
 
