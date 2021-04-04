@@ -14,8 +14,6 @@ public class RunShooter extends CommandBase {
   private Shooter s_shooter;
   private DriveTrain s_driveTrain;
 
-  private ShooterPose newPose;
-
   public RunShooter(Shooter s_shooter, DriveTrain s_driveTrain) {
     addRequirements(s_shooter, s_driveTrain);
     this.s_shooter = s_shooter;
@@ -26,15 +24,13 @@ public class RunShooter extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    s_shooter.setDegrees(s_shooter.getShooterPose().launchAngleDeg);
     s_shooter.stopShooter();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //newPose = new ShooterPose();
-    s_shooter.setShooterPose(newPose);
+    s_shooter.setShooterPose(s_shooter.distanceToDegrees(s_driveTrain.distanceFromGoal()));
   }
 
   // Called once the command ends or is interrupted.

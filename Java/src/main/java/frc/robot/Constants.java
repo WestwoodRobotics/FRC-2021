@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -52,6 +55,16 @@ public final class Constants {
 
         public static final double C_kB_RAMSETE = 2.0,
                                    C_kZ_RAMSETE = 0.7;
+
+        public static final Translation2d C_GOAL_POSE = new Translation2d(feetToMeters(2.5), feetToMeters(-7.5));
+
+        public static double feetToMeters(double feet){
+            return feet/ 3.281;
+        }
+
+        public static double metersToFeet(double meters){
+            return meters * 3.281;
+        }
 
         public static double ticksToMeters(double ticks){
             return ticks*Math.PI*C_WHEEL_DIAMETER_METERS/(C_DRIVE_EPR*C_GEARING);
