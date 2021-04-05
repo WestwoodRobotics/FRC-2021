@@ -205,6 +205,8 @@ public class DriveTrain extends SubsystemBase {
     
     // Odometry
     public void resetOdometry(Pose2d pose){
+        zeroLeftEncoder();
+        zeroRightEncoder();
         odometry.resetPosition(pose, Rotation2d.fromDegrees(this.getHeadingDegrees()));
     }
 
@@ -214,7 +216,7 @@ public class DriveTrain extends SubsystemBase {
 
         zeroHeading();
     
-        odometry.resetPosition(new Pose2d(0.0, 0.0, new Rotation2d(0.0)), Rotation2d.fromDegrees(this.getHeadingDegrees()));
+        fieldOdometry.resetPosition(new Pose2d(0.0, 0.0, new Rotation2d(0.0)), Rotation2d.fromDegrees(this.getHeadingDegrees()));
     }
 
     public Pose2d getPose(){
