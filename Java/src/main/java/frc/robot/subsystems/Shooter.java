@@ -23,9 +23,6 @@ public class Shooter extends SubsystemBase {
 
   private Servo actuator;
 
-  //private double speedSetpoint = 0.0;
-  //private double actuatorPos = 0.0;// Position 0.0 to 1.0
-
   private ShooterPose currentPose = new ShooterPose(C_ACTUATOR_MAX_DEG, 0.0);
 
   // creating feedfoward and velocityPID objects
@@ -50,9 +47,8 @@ public class Shooter extends SubsystemBase {
 
     actuator = new Servo(P_ACTUATOR);
 
-    // actuator.setBounds(C_ACTUATOR_MAX_PWM_MS, 1800,
-    // ((C_ACTUATOR_MIN_PWM_MS+C_ACTUATOR_MAX_PWM_MS)/2), 1200,
-    // C_ACTUATOR_MIN_PWM_MS);
+    // Sets the maximum, center, and minimum values of the PWM pulse (2, 1.5, and 1 seconds) as defined in
+    // the actuator datasheet. Also deals with deadband (1.8 and 1.2)(not crucial with limited PWM devices)
     actuator.setBounds(2.0, 1.8, 1.5, 1.2, 1.0);
   }
 
@@ -107,7 +103,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Degrees above horizontal", this.currentPose.launchAngleDeg);
   }
 
-  public void decreaseLength()// Also used for testing
+  public void decreaseLength()// Used for testing
   {
     if (this.currentPose.launchAngleDeg > C_ACTUATOR_MIN_DEG) {
       this.currentPose.launchAngleDeg -= 3;
@@ -120,7 +116,6 @@ public class Shooter extends SubsystemBase {
   }
 
   // Set degrees above horizontal.
-  // https://docs.google.com/document/d/1j0m0NdNlVOw_fCRlhDM2ct6ic74NRDTYBwbQS5yPkpQ/edit?usp=sharing
   public void setDegrees(double degreesHorizontal){
     currentPose.setAngleDeg(degreesHorizontal);
     actuator.setPosition(currentPose.launchAngleExtension);
@@ -195,22 +190,28 @@ public class Shooter extends SubsystemBase {
     }
 
     public double degreesToExtension(double degreesHorizontal){
+      // See https://docs.google.com/document/d/1j0m0NdNlVOw_fCRlhDM2ct6ic74NRDTYBwbQS5yPkpQ/edit?usp=sharing
+      
       if (degreesHorizontal < C_ACTUATOR_MIN_DEG) {
         degreesHorizontal = C_ACTUATOR_MIN_DEG;
       }
       if (degreesHorizontal > C_ACTUATOR_MAX_DEG) {
         degreesHorizontal = C_ACTUATOR_MAX_DEG;
       }
-      double degrees = 90 - degreesHorizontal;// Step 1
-      degrees -= C_DEGREES_DIFFERENCE;// Step 2 to 3
-      SmartDashboard.putNumber("Degrees", degrees);
-      double radians = Math.toRadians(degrees);
-      double totalRadius = Math.sqrt((Math.pow(C_CENTER_DISTANCE_CM, 2) + Math.pow(C_HOOD_RADIUS_CM, 2))
-          - (2 * C_CENTER_DISTANCE_CM * C_HOOD_RADIUS_CM * Math.cos(radians)));// Step 6
-      SmartDashboard.putNumber("Total Radius", totalRadius);
-      double actuatorExtension = totalRadius - C_ACTUATOR_RETRACTED_CM;
-      actuatorExtension /= C_ACTUATOR_EXTENSION_CM;
-      SmartDashboard.putNumber("Actuator extension", actuatorExtension);
+      // Sets the angles within the correct bounds
+
+      double degreesToB = 90 - degreesHorizontal; //                                                    Step 1
+      degreesToB -= C_DEGREES_DIFFERENCE; //                                                            Step 2
+      //SmartDashboard.putNumber("Degrees", degreesToB); // For testing
+      double radiansToB = Math.toRadians(degreesToB); //                                                Conversion for Math.cos
+      double totalC = Math.sqrt((Math.pow(C_CENTER_DISTANCE_CM, 2) + Math.pow(C_HOOD_RADIUS_CM, 2)) //  Step 3 using law of cosines
+          - (2 * C_CENTER_DISTANCE_CM * C_HOOD_RADIUS_CM * Math.cos(radiansToB))); //                   to find c (actuator length)
+      //SmartDashboard.putNumber("Total Actuator Length", totalC); // For testing
+      double actuatorExtension = totalC - C_ACTUATOR_RETRACTED_CM; //                                   Step 4
+      actuatorExtension /= C_ACTUATOR_FULL_EXTENSION_CM; //                                             Convert an extension range of
+      //                                                                                                14 cm to 1.0 for the actuator
+      //                                                                                                setPosition function
+      SmartDashboard.putNumber("Actuator extension", actuatorExtension);// For testing
       
       return actuatorExtension;
     }
