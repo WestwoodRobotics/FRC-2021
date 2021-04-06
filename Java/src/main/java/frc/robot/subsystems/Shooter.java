@@ -231,14 +231,12 @@ public class Shooter extends SubsystemBase {
 
     public void setLaunchRPM(double rpm){
       this.speedRPM = rpm;
-      //this.speedMPS = rpm * (Math.PI*C_FLYWHEEL_DIAMETER_METERS) / 60.0;
-      this.speedMPS = (rpm*6.28319/60.0)*(C_FLYWHEEL_DIAMETER_METERS/2)*0.5;
+      this.speedMPS = rpm * (Math.PI*C_FLYWHEEL_DIAMETER_METERS) / 60.0;
     }
 
     public void setLaunchMPS(double mps){
       this.speedMPS = mps;
-      //this.speedRPM = Math.max(mps * 60.0 / (Math.PI*C_FLYWHEEL_DIAMETER_METERS), C_MIN_SPEED);
-      this.speedRPM = mps/0.5 * (2/C_FLYWHEEL_DIAMETER_METERS) * 60.0/6.28319;
+      this.speedRPM = Math.max(mps * 60.0 / (Math.PI*C_FLYWHEEL_DIAMETER_METERS), C_MIN_SPEED);
     }
   }
 
