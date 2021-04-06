@@ -106,7 +106,8 @@ public final class Constants {
                                    C_kI = 0,
                                    C_kD = 0;
         
-        public static final double C_FLYWHEEL_DIAMETER_METERS = 0.1524;
+        public static final double C_FLYWHEEL_DIAMETER_METERS = 0.1524,
+                                   C_FLYWHEEL_MASS_KG = 0.3674098;
 
         public static final double  C_ACTUATOR_MIN_PWM_MS = 1050, // About 1 second, the minimum PMW value
                                     C_ACTUATOR_MAX_PWM_MS = 1950, // About 2 second, the maximum PMW value
