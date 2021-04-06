@@ -150,10 +150,10 @@ public class Shooter extends SubsystemBase {
     double vyLaunch = vyGoal - (C_GRAV_ACCEL*metersFromGoal)/vx;
 
     // Launch angle in radians (theta1)
-    double launchAngleRadians = -Math.atan(vyLaunch/vx);
+    double launchAngleRadians = -Math.atan(vyLaunch/vx)*0.71;
     SmartDashboard.putNumber("angle", Math.toDegrees(launchAngleRadians));
     
-    double launchSpeedMPS = (Math.sqrt(Math.pow(vx, 2) + Math.pow(vyLaunch, 2))) * 2.3;
+    double launchSpeedMPS = (Math.sqrt(Math.pow(vx, 2) + Math.pow(vyLaunch, 2))) * 2.4; // * 2.3
     // *2 
     return new ShooterPose(launchAngleRadians, launchSpeedMPS, false, false);
   }
