@@ -59,9 +59,9 @@ public class DriveTrain extends SubsystemBase {
 
     /** Creates a new DriveTrain. */
     public DriveTrain() {
-        config();
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(this.getHeadingDegrees()));
         fieldOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(this.getHeadingDegrees()));
+        config();
     }
 
     // Drives wheels at percentage from [-1.0, +1.0]
@@ -76,13 +76,17 @@ public class DriveTrain extends SubsystemBase {
         drive.feed();
     }
 
+    public void arcadeDrive(double xSpeed, double zRotation){
+        drive.arcadeDrive(xSpeed, zRotation);
+    }
+
     public void setLeft(double leftMetersPerSec){
-        SmartDashboard.putNumber("ticks per hun", metersToTicks(leftMetersPerSec)/10);
-        leftMaster.set(ControlMode.Velocity, metersToTicks(leftMetersPerSec)/10);
+        //SmartDashboard.putNumber("ticks per hun", metersToTicks(leftMetersPerSec)/10);
+        //leftMaster.set(ControlMode.Velocity, metersToTicks(leftMetersPerSec)/10);
     }
 
     public void setRight(double rightMetersPerSec){
-        leftMaster.set(ControlMode.Velocity, metersToTicks(rightMetersPerSec)/10);
+        //leftMaster.set(ControlMode.Velocity, metersToTicks(rightMetersPerSec)/10);
     }
 
     public void setVelocityPID(double leftMetersPerSec, double rightMetersPerSec){
@@ -110,7 +114,7 @@ public class DriveTrain extends SubsystemBase {
 
     public double angleToGoalDeg(){
         double diffX = this.getFieldPose().getTranslation().getX() - C_GOAL_POSE.getX();
-        double diffY = -(this.getFieldPose().getTranslation().getY() + C_GOAL_POSE.getY());
+        double diffY = C_GOAL_POSE.getY() - this.getFieldPose().getTranslation().getY();
         return Math.toDegrees(Math.tan(diffX/diffY));
     }
 
@@ -193,6 +197,10 @@ public class DriveTrain extends SubsystemBase {
     public double getAverageEncoderMeters()   {return (leftEncoderGetMeters() + rightEncoderGetMeters())/2.0;}
     public double getAverageEncoderVelMeters()      {return (leftEncoderVelMeters() + rightEncoderVelMeters())/2.0;}
 
+    public DifferentialDriveKinematics getKinematics(){
+        return this.kinematics;
+    }
+
     // Reset
     public void zeroLeftEncoder(){leftMaster.setSelectedSensorPosition(0);}
     public void zeroRightEncoder(){rightMaster.setSelectedSensorPosition(0);}
@@ -214,7 +222,7 @@ public class DriveTrain extends SubsystemBase {
 
         zeroHeading();
     
-        odometry.resetPosition(new Pose2d(0.0, 0.0, new Rotation2d(0.0)), Rotation2d.fromDegrees(this.getHeadingDegrees()));
+        fieldOdometry.resetPosition(C_ORIGIN_POSE, Rotation2d.fromDegrees(this.getHeadingDegrees()));
     }
 
     public Pose2d getPose(){

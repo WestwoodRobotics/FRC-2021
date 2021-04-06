@@ -143,7 +143,7 @@ public class Shooter extends SubsystemBase {
     double heightDiff = C_SHOOT_HEIGHT_METERS - C_GOAL_HEIGHT_METERS;
     
     // X component of velocity (vx)
-    double vx = Math.sqrt(C_GRAV_ACCEL*metersFromGoal/(2*(Math.tan(approachAngleRadians) - heightDiff)));
+    double vx = Math.sqrt(C_GRAV_ACCEL*metersFromGoal/(2*(Math.tan(approachAngleRadians) - heightDiff/metersFromGoal)));
     
     // Y component of velocity when passing through goal (vy0)
     double vyGoal = vx*Math.tan(approachAngleRadians);
@@ -156,9 +156,10 @@ public class Shooter extends SubsystemBase {
 
     // Launch angle in radians (theta1)
     double launchAngleRadians = -Math.atan(vyLaunch/vx);
+    SmartDashboard.putNumber("angle", Math.toDegrees(launchAngleRadians));
     
-    double launchSpeedMPS = Math.sqrt(Math.pow(vx, 2) + Math.pow(vyLaunch, 2));
-
+    double launchSpeedMPS = (Math.sqrt(Math.pow(vx, 2) + Math.pow(vyLaunch, 2))) * 2;
+    // *2 
     return new ShooterPose(launchAngleRadians, launchSpeedMPS, false, false);
   }
 
@@ -183,7 +184,7 @@ public class Shooter extends SubsystemBase {
       }
 
       if(isRPM == true){
-        setLaunchRPM(speed);
+        setLaunchRPM(Math.max(speed, C_MIN_SPEED));
       }
       else if(isRPM == false){
         setLaunchMPS(speed);
@@ -229,12 +230,12 @@ public class Shooter extends SubsystemBase {
 
     public void setLaunchRPM(double rpm){
       this.speedRPM = rpm;
-      this.speedMPS = rpm * C_FLYWHEEL_DIAMETER_METERS / 60.0;
+      this.speedMPS = rpm * (Math.PI*C_FLYWHEEL_DIAMETER_METERS) / 60.0;
     }
 
     public void setLaunchMPS(double mps){
       this.speedMPS = mps;
-      this.speedRPM = mps * 60.0 / C_FLYWHEEL_DIAMETER_METERS;
+      this.speedRPM = Math.max(mps * 60.0 / (Math.PI*C_FLYWHEEL_DIAMETER_METERS), C_MIN_SPEED);
     }
   }
 

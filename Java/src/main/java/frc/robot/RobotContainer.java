@@ -65,6 +65,8 @@ public class RobotContainer {
   private final JoystickButton rightTrig = new JoystickButton(rightJoy, 1);
   private final JoystickButton leftTrig = new JoystickButton(leftJoy, 1);
   
+  private final JoystickButton mechRightBumper = new JoystickButton(mechJoy, 6);
+
   // Y-box controller triggers, bumpers, buttons
   //private final JoystickButton mechRightBumper = new JoystickButton(mechJoy, 6);
   private final JoystickButton mechRightTrigger = new JoystickButton(mechJoy, 8);
@@ -128,8 +130,10 @@ public class RobotContainer {
     
     mechRightTrigger.whenPressed(() -> s_magazine.feedBall()).whenReleased(() -> s_magazine.stopBall());
 
-    mechSquare.toggleWhenPressed(new DriveHeadingProfiledPID(s_driveTrain, s_driveTrain.angleToGoalDeg(), 1.5, 1).alongWith(new RunShooter(s_shooter, s_driveTrain)));
+    mechSquare.toggleWhenPressed(new RunShooter(s_shooter, s_driveTrain));
     mechCross.whenPressed(() -> s_intake.togglePiston());
+
+    mechRightBumper.whenPressed(() -> s_driveTrain.resetFieldOdometry());
   } 
 
 
