@@ -118,11 +118,11 @@ public final class Constants {
                                     C_ACTUATOR_FULL_EXTENSION_CM = 14,
                                     C_HOOD_RADIUS_CM = 26,
                                     C_CENTER_DISTANCE_CM = 38,
-                                    C_DEGREES_DIFFERENCE = 7;
+                                    C_DEGREES_DIFFERENCE = 9;
 
         public static final double C_GOAL_HEIGHT_METERS = 2.5,
                                    C_SHOOT_HEIGHT_METERS = 0.889,
-                                   C_GOAL_APPROACH_DEGREES = 15,
+                                   C_GOAL_APPROACH_DEGREES = 0,
                                    C_GRAV_ACCEL = 9.8;
 
         public static final double C_MIN_SPEED = 2000;

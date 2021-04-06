@@ -153,7 +153,7 @@ public class Shooter extends SubsystemBase {
     double launchAngleRadians = -Math.atan(vyLaunch/vx);
     SmartDashboard.putNumber("angle", Math.toDegrees(launchAngleRadians));
     
-    double launchSpeedMPS = (Math.sqrt(Math.pow(vx, 2) + Math.pow(vyLaunch, 2))) * 2;
+    double launchSpeedMPS = (Math.sqrt(Math.pow(vx, 2) + Math.pow(vyLaunch, 2))) * 2.3;
     // *2 
     return new ShooterPose(launchAngleRadians, launchSpeedMPS, false, false);
   }
@@ -236,7 +236,7 @@ public class Shooter extends SubsystemBase {
 
     public void setLaunchMPS(double mps){
       this.speedMPS = mps;
-      this.speedRPM = Math.max(mps * 60.0 / (Math.PI*C_FLYWHEEL_DIAMETER_METERS), C_MIN_SPEED);
+      this.speedRPM = mps * 60.0 / (Math.PI*C_FLYWHEEL_DIAMETER_METERS);
     }
   }
 
