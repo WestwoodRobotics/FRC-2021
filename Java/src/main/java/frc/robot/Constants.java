@@ -94,7 +94,7 @@ public final class Constants {
         public static final double C_INTAKE_SPEED = 1.0;
     }
 
-    public static final class ShooterConstants{// TODO Set motor ports
+    public static final class ShooterConstants{
         public static final int P_SHOOTER_spMAX_1 = 7,
                                 P_SHOOTER_spMAX_2 = 8,
                                 P_ACTUATOR = 0;
@@ -106,7 +106,6 @@ public final class Constants {
                                    C_kI = 0,
                                    C_kD = 0;
         
-
         public static final double C_FLYWHEEL_DIAMETER_METERS = 0.1524;
 
         public static final double  C_ACTUATOR_MIN_PWM_MS = 1050, // About 1 second, the minimum PMW value
@@ -116,7 +115,7 @@ public final class Constants {
                                     C_ACTUATOR_MAX_DEG = 44,
 
                                     C_ACTUATOR_RETRACTED_CM = 23.65,
-                                    C_ACTUATOR_EXTENSION_CM = (14), // 140 mm extension model; needed?
+                                    C_ACTUATOR_FULL_EXTENSION_CM = 14,
                                     C_HOOD_RADIUS_CM = 26,
                                     C_CENTER_DISTANCE_CM = 38,
                                     C_DEGREES_DIFFERENCE = 7;
