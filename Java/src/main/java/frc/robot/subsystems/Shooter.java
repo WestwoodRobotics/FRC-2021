@@ -150,10 +150,10 @@ public class Shooter extends SubsystemBase {
     double vyLaunch = vyGoal - (C_GRAV_ACCEL*metersFromGoal)/vx;
 
     // Launch angle in radians (theta1)
-    double launchAngleRadians = -Math.atan(vyLaunch/vx)*0.71;
+    double launchAngleRadians = -Math.atan(vyLaunch/vx);//*0.71;
     SmartDashboard.putNumber("angle", Math.toDegrees(launchAngleRadians));
     
-    double launchSpeedMPS = (Math.sqrt(Math.pow(vx, 2) + Math.pow(vyLaunch, 2))) * 2.4; // * 2.3
+    double launchSpeedMPS = (Math.sqrt(Math.pow(vx, 2) + Math.pow(vyLaunch, 2)));// * 2.4; // * 2.3
     // *2 
     return new ShooterPose(launchAngleRadians, launchSpeedMPS, false, false);
   }
@@ -231,12 +231,20 @@ public class Shooter extends SubsystemBase {
 
     public void setLaunchRPM(double rpm){
       this.speedRPM = rpm;
-      this.speedMPS = rpm * (Math.PI*C_FLYWHEEL_DIAMETER_METERS) / 60.0;
+      double flywheelRadius = C_FLYWHEEL_DIAMETER_METERS/2;
+      double hoodRadius = C_HOOD_RADIUS_CM/100.0;
+      double omega = rpm/60.0*2*Math.PI;
+      //this.speedMPS = rpm * (Math.PI*C_FLYWHEEL_DIAMETER_METERS) / 60.0;
+      this.speedMPS = (hoodRadius*flywheelRadius*omega + Math.pow(flywheelRadius, 2)*omega)/(2*hoodRadius);
     }
 
     public void setLaunchMPS(double mps){
       this.speedMPS = mps;
-      this.speedRPM = mps * 60.0 / (Math.PI*C_FLYWHEEL_DIAMETER_METERS);
+      double flywheelRadius = C_FLYWHEEL_DIAMETER_METERS/2;
+      double hoodRadius = C_HOOD_RADIUS_CM/100.0;
+      this.speedMPS = (60.0*hoodRadius*mps)/(Math.PI * (hoodRadius*flywheelRadius + Math.pow(flywheelRadius, 2)));
+      //this.speedRPM = mps * 60.0 / (Math.PI*C_FLYWHEEL_DIAMETER_METERS);
+
     }
   }
 
