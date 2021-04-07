@@ -33,9 +33,16 @@ public final class Constants {
         /*public static final double C_kS = 1.12,
                                    C_kV = 3.08,
                                    C_kA = 0.622;*/
-        public static final double C_kS = 0.653,
+        
+        // Feedforward for Orchestra Hall, Main Bot
+        /*public static final double C_kS = 0.653,
                                    C_kV = 0.893,
-                                   C_kA = 0.13;
+                                   C_kA = 0.13;*/
+        
+        public static final double C_kS = 0.646,
+                                   C_kV = 0.895,
+                                   C_kA = 0.093;
+        
 
         // Left PID                               
         public static final double C_kP_LEFT = 0,//8,
