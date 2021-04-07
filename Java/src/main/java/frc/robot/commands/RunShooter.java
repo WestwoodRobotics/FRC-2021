@@ -4,10 +4,10 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Shooter.ShooterPose;
 
 public class RunShooter extends CommandBase {
   /** Creates a new RunShooter. */
@@ -31,6 +31,10 @@ public class RunShooter extends CommandBase {
   @Override
   public void execute() {
     s_shooter.setShooterPose(s_shooter.distanceToDegrees(s_driveTrain.distanceFromGoal()));
+    //SmartDashboard.putNumber("distancefromgoal", s_driveTrain.distanceFromGoal());
+    SmartDashboard.putNumber("angle", s_shooter.distanceToDegrees(s_driveTrain.distanceFromGoal()).launchAngleDeg);
+    SmartDashboard.putNumber("speed", s_shooter.distanceToDegrees(s_driveTrain.distanceFromGoal()).speedRPM);
+    //System.out.println("hello");
   }
 
   // Called once the command ends or is interrupted.

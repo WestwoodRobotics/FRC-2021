@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 
 /**
@@ -57,6 +58,7 @@ public final class Constants {
                                    C_kZ_RAMSETE = 0.7;
 
         public static final Translation2d C_GOAL_POSE = new Translation2d(feetToMeters(2.5), feetToMeters(-7.5));
+        public static final Pose2d C_ORIGIN_POSE = new Pose2d(feetToMeters(7.5), feetToMeters(-7.5), new Rotation2d(180.0));
 
         public static double feetToMeters(double feet){
             return feet/ 3.281;
@@ -84,7 +86,7 @@ public final class Constants {
     }
     
     public static final class IntakeConstants{
-        public static final int P_INTAKE_talSRX_1 = 0;
+        public static final int P_INTAKE_talSRX_1 = 4;
         
         public static final int P_INTAKE_sol_1 = 0;
         //public static final int P_INTAKE_sol_2 = 0;
@@ -106,21 +108,24 @@ public final class Constants {
         
         public static final double C_FLYWHEEL_DIAMETER_METERS = 0.1524;
 
-        public static final double  C_ACTUATOR_MIN_DEG = 6,
-                                    C_ACTUATOR_MAX_DEG = 37,
-                                    // Limits of the ball trajectory angle above the horizontal
+        public static final double  C_ACTUATOR_MIN_PWM_MS = 1050, // About 1 second, the minimum PMW value
+                                    C_ACTUATOR_MAX_PWM_MS = 1950, // About 2 second, the maximum PMW value
+
+                                    C_ACTUATOR_MIN_DEG = 13, // Above the horizontal
+                                    C_ACTUATOR_MAX_DEG = 44,
 
                                     C_ACTUATOR_RETRACTED_CM = 23.65,
                                     C_ACTUATOR_FULL_EXTENSION_CM = 14,
                                     C_HOOD_RADIUS_CM = 26,
                                     C_CENTER_DISTANCE_CM = 38,
-                                    C_DEGREES_DIFFERENCE = 15; // See implementation for explanation
-                                    // Measurements needed to find actuator extension
+                                    C_DEGREES_DIFFERENCE = 9;
 
-        public static final double C_GOAL_HEIGHT_METERS = 2.49555,
+        public static final double C_GOAL_HEIGHT_METERS = 2.5,
                                    C_SHOOT_HEIGHT_METERS = 0.889,
                                    C_GOAL_APPROACH_DEGREES = 0,
                                    C_GRAV_ACCEL = 9.8;
+
+        public static final double C_MIN_SPEED = 2000;
 
 
         
