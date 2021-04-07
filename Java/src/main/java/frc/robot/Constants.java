@@ -120,9 +120,9 @@ public final class Constants {
                                     C_CENTER_DISTANCE_CM = 38,
                                     C_DEGREES_DIFFERENCE = 9;
 
-        public static final double C_GOAL_HEIGHT_METERS = 2.5,
+        public static final double C_GOAL_HEIGHT_METERS = 2.4384,
                                    C_SHOOT_HEIGHT_METERS = 0.889,
-                                   C_GOAL_APPROACH_DEGREES = 0,
+                                   C_GOAL_APPROACH_DEGREES = -10, // -13
                                    C_GRAV_ACCEL = 9.8;
 
         public static final double C_MIN_SPEED = 2000;
