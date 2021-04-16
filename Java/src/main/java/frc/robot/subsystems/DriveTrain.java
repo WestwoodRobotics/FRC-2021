@@ -93,6 +93,10 @@ public class DriveTrain extends SubsystemBase {
         drive.feed();
     }
 
+    public void driveWheelsArcade(double x, double y){
+        drive.arcadeDrive(x, y);
+    }
+
     public void setLeft(double leftMetersPerSec){
         SmartDashboard.putNumber("ticks per hun", metersToTicks(leftMetersPerSec)/10);
         leftMaster.set(ControlMode.Velocity, metersToTicks(leftMetersPerSec)/10);

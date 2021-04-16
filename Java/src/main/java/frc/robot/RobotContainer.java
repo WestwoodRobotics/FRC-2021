@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.auto.RunPaths;
+import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.DriveDistanceProfiledPID;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
@@ -81,10 +82,18 @@ public class RobotContainer {
     s_magazine = new Magazine();
     //s_intake = new Intake();
 
-    s_driveTrain.setDefaultCommand(
+    /*s_driveTrain.setDefaultCommand(
       new TankDrive(
         () -> -leftJoy.getY(),
         () -> rightJoy.getY(),
+        s_driveTrain
+      )
+    );*/
+
+    s_driveTrain.setDefaultCommand(
+      new ArcadeDrive(
+        () -> rightJoy.getX(), 
+        () -> -rightJoy.getY(), 
         s_driveTrain
       )
     );
