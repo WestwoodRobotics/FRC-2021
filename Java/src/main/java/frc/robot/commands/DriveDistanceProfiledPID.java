@@ -32,7 +32,7 @@ public class DriveDistanceProfiledPID extends ProfiledPIDCommand {
         // This uses the output
         (output, setpoint) -> {
           // Use the output (and setpoint, if desired) here
-          s_driveTrain.setVelocityPID(output, output);
+          s_driveTrain.setVelocityPID(-output, -output);
           SmartDashboard.putNumber("output", output);
         }, s_driveTrain);
 

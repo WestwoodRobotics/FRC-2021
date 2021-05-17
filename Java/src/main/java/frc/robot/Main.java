@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.Stack;
-
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -15,9 +12,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  * call.
  */
 public final class Main {
-  private Main() {
-    
-  }
+  private Main() {}
 
   /**
    * Main initialization function. Do not perform any initialization here.

@@ -9,18 +9,18 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 
-public class TankDrive extends CommandBase {
+public class ArcadeDrive extends CommandBase {
   
   private DriveTrain s_driveTrain;
-  private DoubleSupplier leftSpeed;
-  private DoubleSupplier rightSpeed;
+  private DoubleSupplier x;
+  private DoubleSupplier y;
   
   /** Creates a new TankDrive. */
-  public TankDrive(DoubleSupplier leftSpeed, DoubleSupplier rightSpeed, DriveTrain s_driveTrain){
+  public ArcadeDrive(DoubleSupplier x, DoubleSupplier y, DriveTrain s_driveTrain){
     // Use addRequirements() here to declare subsystem dependencies.
     this.s_driveTrain = s_driveTrain;
-    this.leftSpeed = leftSpeed;
-    this.rightSpeed = rightSpeed;
+    this.x = x;
+    this.y = y;
     
     addRequirements(s_driveTrain);
   }
@@ -34,12 +34,13 @@ public class TankDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(s_driveTrain.getSlowMode()){
+    /*if(s_driveTrain.getSlowMode()){
       s_driveTrain.driveWheelsPercent(0.75*leftSpeed.getAsDouble(), 0.75*rightSpeed.getAsDouble());
     }
     else if(!s_driveTrain.getSlowMode()){
       s_driveTrain.driveWheelsPercent(leftSpeed.getAsDouble(), rightSpeed.getAsDouble());
-    }
+    }*/
+    s_driveTrain.driveWheelsArcade(x.getAsDouble(), y.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

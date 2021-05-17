@@ -13,19 +13,22 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.auto.RunPaths;
-import frc.robot.commands.DriveHeadingProfiledPID;
-import frc.robot.commands.RunShooter;
+import frc.robot.commands.ArcadeDrive;
+import frc.robot.commands.DriveDistanceProfiledPID;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Magazine;
-import frc.robot.subsystems.Shooter;
 
 
 /**
@@ -41,10 +44,10 @@ public class RobotContainer {
   private final DriveTrain s_driveTrain;
 
   private final Magazine s_magazine;
-  private final Shooter s_shooter;
-  private final Intake s_intake;
+  //private final Intake s_intake;
 
   // Commands
+
   private Command barrelPath;
   private Command bouncePath;
   private Command blueA;
@@ -63,19 +66,12 @@ public class RobotContainer {
 
   // Configure joystick buttons
   private final JoystickButton rightTrig = new JoystickButton(rightJoy, 1);
-  private final JoystickButton leftTrig = new JoystickButton(leftJoy, 1);
   
-  private final JoystickButton mechRightBumper = new JoystickButton(mechJoy, 6);
-
   // Y-box controller triggers, bumpers, buttons
-  //private final JoystickButton mechRightBumper = new JoystickButton(mechJoy, 6);
-  private final JoystickButton mechRightTrigger = new JoystickButton(mechJoy, 8);
+  private final JoystickButton mechRightBumper = new JoystickButton(mechJoy, 6);
   private final JoystickButton mechLeftTrigger = new JoystickButton(mechJoy, 7);
-
-  private final JoystickButton mechTriangle = new JoystickButton(mechJoy, 4);
-  private final JoystickButton mechCircle = new JoystickButton(mechJoy, 3);
-  private final JoystickButton mechSquare = new JoystickButton(mechJoy, 1);
-  private final JoystickButton mechCross = new JoystickButton(mechJoy, 2);
+  private final JoystickButton mechTriangle = new JoystickButton(mechJoy,4);
+  private final JoystickButton mechCross = new JoystickButton(mechJoy,1);
 
   //private final JoystickButton rightTrig = new JoystickButton(joy, 8);
   //private final Joystick rightJoy = new Joystick(1);
@@ -84,19 +80,46 @@ public class RobotContainer {
   public RobotContainer() {
     s_driveTrain = new DriveTrain();
     s_magazine = new Magazine();
-    s_intake = new Intake();
+    //s_intake = new Intake();
 
-    s_shooter = new Shooter();
-  
-
-    s_driveTrain.setDefaultCommand(
+    /*s_driveTrain.setDefaultCommand(
       new TankDrive(
         () -> -leftJoy.getY(),
         () -> rightJoy.getY(),
         s_driveTrain
       )
+    );*/
+
+    s_driveTrain.setDefaultCommand(
+      new ArcadeDrive(
+        () -> rightJoy.getX(), 
+        () -> -rightJoy.getY(), 
+        s_driveTrain
+      )
     );
+
+    /*s_magazine.setDefaultCommand(
+      new RunCommand(
+        () -> {
+          if (mechLeftTrigger.get()){
+            s_magazine.shiftBall();
+          }
+          else{
+            s_magazine.feedBall(() -> mechJoy.getRawAxis(4));
+          }
+        },
+        s_magazine
+      )
+    );*/
     
+    // s_driveTrain.setDefaultCommand(
+    //   new TankDrive(
+    //     () -> -leftJoy.getY(),
+    //     () -> rightJoy.getY(),
+    //     s_driveTrain
+    //   )
+    // );
+
     configureButtonBindings();
   }
 
@@ -108,32 +131,13 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
       
-    rightTrig.whenPressed(() -> s_driveTrain.setSlowMode(true)).whenReleased(() -> s_driveTrain.setSlowMode(false));
-    leftTrig.whenPressed(() -> s_driveTrain.setStraightMode(true)).whenReleased(() -> s_driveTrain.setStraightMode(false));
-    
+    rightTrig.whenPressed(() -> s_driveTrain.toggleSlowMode());
     //rightTrig.whenPressed(new RunCommand(() -> s_driveTrain.setVelocityPID(0.5, 0.5)));
     //rightTrig.whenPressed(new DriveDistanceProfiledPID(s_driveTrain, 5, 0, 1, 1));
-    //rightTrig.whenPressed(new DriveHeadingProfiledPID(s_driveTrain, 90, 1.5, 1))
-
     (new JoystickButton(rightJoy, 2)).whenActive(new InstantCommand(() -> s_driveTrain.config()));
-
-    mechTriangle.whenPressed(() -> s_shooter.increaseLength());
-    mechCircle.whenPressed(()-> s_shooter.decreaseLength());
-
-    mechLeftTrigger.whenPressed(() -> {
-      s_magazine.shiftBall();
-      s_intake.intakeIn();
-    }).whenReleased(() -> {
-      s_magazine.stopBall();
-      s_intake.intakeStop();
-    });
-    
-    mechRightTrigger.whenPressed(() -> s_magazine.feedBall()).whenReleased(() -> s_magazine.stopBall());
-
-    mechSquare.toggleWhenPressed(new RunShooter(s_shooter, s_driveTrain));
-    mechCross.whenPressed(() -> s_intake.togglePiston());
-
-    mechRightBumper.whenPressed(() -> s_driveTrain.resetFieldOdometry());
+    //mechCross.whenPressed(() -> s_intake.togglePiston()); 
+    //mechTriangle.whenPressed(() -> s_intake.intakeIn()).whenReleased(() -> s_intake.intakeStop());
+    //mechLeftTrigger.whenPressed(() -> s_magazine.shiftBall()).whenReleased(() -> s_magazine.stopBall());
   } 
 
 
@@ -144,7 +148,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return slalom;
+    return barrelPath;
   }
 
   public void loadBarrel(){
