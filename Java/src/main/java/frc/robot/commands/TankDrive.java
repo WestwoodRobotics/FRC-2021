@@ -34,12 +34,16 @@ public class TankDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double leftSpeedD = leftSpeed.getAsDouble();
+    double rightSpeedD = s_driveTrain.getStraightMode()?-leftSpeed.getAsDouble():rightSpeed.getAsDouble();
+
     if(s_driveTrain.getSlowMode()){
-      s_driveTrain.driveWheelsPercent(0.75*leftSpeed.getAsDouble(), 0.75*rightSpeed.getAsDouble());
+      leftSpeedD *= .75;
+      rightSpeedD *= .75;
     }
-    else if(!s_driveTrain.getSlowMode()){
-      s_driveTrain.driveWheelsPercent(leftSpeed.getAsDouble(), rightSpeed.getAsDouble());
-    }
+
+    s_driveTrain.driveWheelsPercent(leftSpeedD, rightSpeedD);
+
   }
 
   // Called once the command ends or is interrupted.

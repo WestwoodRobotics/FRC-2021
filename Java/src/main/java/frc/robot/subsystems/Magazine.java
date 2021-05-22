@@ -4,39 +4,43 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.DoubleSupplier;
+import static frc.robot.Constants.MagazineConstants.P_MAGAZINE_talSRX_1;
+import static frc.robot.Constants.MagazineConstants.P_MAGAZINE_talSRX_2;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import static frc.robot.Constants.MagazineConstants.*;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Magazine extends SubsystemBase {
   
   //Motor controllers of Magazine
-  //private final WPI_VictorSPX feed = new WPI_VictorSPX(P_MAGAZINE_vicSPX_1);
-  private final WPI_TalonSRX shift = new WPI_TalonSRX(P_MAGAZINE_talSRX_2);
+  private final WPI_TalonSRX feed = new WPI_TalonSRX(P_MAGAZINE_talSRX_2);
+  private final WPI_TalonSRX shift = new WPI_TalonSRX(P_MAGAZINE_talSRX_1);
   
   /** Creates a new Magazine. */
   public Magazine() {
 
     shift.setInverted(true);
+    feed.setInverted(true);
+
+    feed.setNeutralMode(NeutralMode.Brake);
   }
 
   public void shiftBall(){
     // Set to an arbitrary value [-1, 1]; just needs to move the motor
-    shift.set(0.5);
+    shift.set(1);
   }
 
-  public void feedBall(DoubleSupplier speedSupplier){
+  public void feedBall(){
     // Set to a variable speed
-    shift.set((speedSupplier.getAsDouble()+1.0)/2);//   -1 is very important; the axis defaults at -1
-    //feed.set(speedSupplier.getAsDouble());
+    shift.set(1);//   -1 is very important; the axis defaults at -1
+    feed.set(1);
   }
 
   public void stopBall(){
     shift.stopMotor();
-    //feed.stopMotor();
+    feed.stopMotor();
   }
 
 
