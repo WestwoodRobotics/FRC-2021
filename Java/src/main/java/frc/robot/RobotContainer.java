@@ -17,10 +17,9 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.auto.RunPaths;
-import frc.robot.commands.DriveHeadingProfiledPID;
-import frc.robot.commands.RunShooter;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
@@ -118,7 +117,7 @@ public class RobotContainer {
     (new JoystickButton(rightJoy, 2)).whenActive(new InstantCommand(() -> s_driveTrain.config()));
 
     mechTriangle.whenPressed(() -> s_shooter.increaseLength());
-    mechCircle.whenPressed(()-> s_shooter.decreaseLength());
+    //mechCircle.whenPressed(()-> s_shooter.decreaseLength());
 
     mechLeftTrigger.whenPressed(() -> {
       s_magazine.shiftBall();
@@ -130,10 +129,11 @@ public class RobotContainer {
     
     mechRightTrigger.whenPressed(() -> s_magazine.feedBall()).whenReleased(() -> s_magazine.stopBall());
 
-    mechSquare.toggleWhenPressed(new RunShooter(s_shooter, s_driveTrain));
-    mechCross.whenPressed(() -> s_intake.togglePiston());
+    mechSquare.toggleWhenPressed(new RunCommand(() -> s_shooter.setShooterVelocityPID(4000))).whenReleased(() -> s_shooter.stopShooter());
+    //mechCross.whenPressed(new InstantCommand(() -> s_shooter.increaseLength()));
+    //mechCross.whenPressed(() -> s_intake.togglePiston());
 
-    mechRightBumper.whenPressed(() -> s_driveTrain.resetFieldOdometry());
+    //mechRightBumper.whenPressed(() -> s_driveTrain.resetFieldOdometry());
   } 
 
 

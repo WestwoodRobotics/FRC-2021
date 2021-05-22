@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,6 +37,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.loadGalacticSearch();
     m_robotContainer.loadSlalom();
 
+    CameraServer.getInstance().startAutomaticCapture();
     //comp = new Compressor();
     //comp.setClosedLoopControl(true);
 

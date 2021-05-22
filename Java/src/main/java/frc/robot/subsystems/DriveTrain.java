@@ -71,8 +71,8 @@ public class DriveTrain extends SubsystemBase {
 
     // Drives wheels at voltage
     public void driveWheelsVolts(double leftVolts, double rightVolts){
-        leftMaster.setVoltage(leftVolts);
-        rightMaster.setVoltage(rightVolts);
+        //leftMaster.setVoltage(leftVolts);
+        //rightMaster.setVoltage(rightVolts);
         drive.feed();
     }
 

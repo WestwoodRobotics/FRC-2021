@@ -23,6 +23,8 @@ public class Shooter extends SubsystemBase {
 
   private Servo actuator;
 
+  private double actuatorPos;
+
   private ShooterPose currentPose = new ShooterPose(C_ACTUATOR_MAX_DEG, 0.0);
 
   // creating feedfoward and velocityPID objects
@@ -46,6 +48,7 @@ public class Shooter extends SubsystemBase {
     // Actuator stuff
 
     actuator = new Servo(P_ACTUATOR);
+    actuatorPos = 0;
 
     // Sets the maximum, center, and minimum values of the PWM pulse (2, 1.5, and 1 seconds) as defined in
     // the actuator datasheet. Also deals with deadband (1.8 and 1.2)(not crucial with limited PWM devices)
@@ -94,23 +97,23 @@ public class Shooter extends SubsystemBase {
   // Actuator
   public void increaseLength()// Used for testing
   {
-    if (this.currentPose.launchAngleExtension < C_ACTUATOR_MAX_DEG) {
-      this.currentPose.launchAngleDeg += 3;
+    if (actuatorPos < C_ACTUATOR_MAX_DEG) {
+      actuatorPos += 3;
     }
-    // actuator.setPosition(actuatorPos);
+    actuator.setPosition(actuatorPos);
     // actuator.setSpeed(1);
-    this.setDegrees(this.currentPose.launchAngleDeg);
+    //this.setDegrees(this.currentPose.launchAngleDeg);
     SmartDashboard.putNumber("Degrees above horizontal", this.currentPose.launchAngleDeg);
   }
 
   public void decreaseLength()// Used for testing
   {
-    if (this.currentPose.launchAngleDeg > C_ACTUATOR_MIN_DEG) {
-      this.currentPose.launchAngleDeg -= 3;
+    if (actuatorPos > C_ACTUATOR_MIN_DEG) {
+      actuatorPos -= 3;
     }
-    // actuator.setPosition(actuatorPos);
+    actuator.setPosition(actuatorPos);
     // actuator.setSpeed(-1);
-    this.setDegrees(this.currentPose.launchAngleDeg);
+    //this.setDegrees(this.currentPose.launchAngleDeg);
     // actuator.setPosition(0);
     SmartDashboard.putNumber("Degrees above horizontal", this.currentPose.launchAngleDeg);
   }
