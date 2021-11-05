@@ -14,11 +14,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Magazine extends SubsystemBase {
   
-  //Motor controllers of Magazine
+  
   private final WPI_TalonSRX feed = new WPI_TalonSRX(P_MAGAZINE_talSRX_2);
   private final WPI_TalonSRX shift = new WPI_TalonSRX(P_MAGAZINE_talSRX_1);
   
-  /** Creates a new Magazine. */
+  
   public Magazine() {
 
     shift.setInverted(true);
@@ -28,13 +28,13 @@ public class Magazine extends SubsystemBase {
   }
 
   public void shiftBall(){
-    // Set to an arbitrary value [-1, 1]; just needs to move the motor
+    
     shift.set(1);
   }
 
   public void feedBall(){
-    // Set to a variable speed
-    shift.set(1);//   -1 is very important; the axis defaults at -1
+    
+    shift.set(1);
     feed.set(1);
   }
 
@@ -45,7 +45,5 @@ public class Magazine extends SubsystemBase {
 
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+  public void periodic() {}
 }
